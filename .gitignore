@@ -1,0 +1,11 @@
+.vagrant
+
+.DS_Store
+
+# Mr Developer
+.mr.developer.cfg
+.project
+.pydevproject
+
+*.sublime-project
+*.sublime-workspace

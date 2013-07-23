@@ -1,0 +1,13 @@
+{
+  "sources": {
+    "deis": {
+      "path": "."
+    },
+    "apt": {
+      "locked_version": "2.0.0"
+    },
+    "sudo": {
+      "locked_version": "2.1.2"
+    }
+  }
+}
