@@ -27,6 +27,19 @@ directory controller_dir do
   mode 0755 # need nginx access to static files
 end
 
+
+# generate django secret key and write it to disk
+
+require 'securerandom'
+
+file "#{controller_dir}/.secret_key" do
+  owner username
+  group group
+  mode 0600
+  content SecureRandom.base64(128)
+  action :create_if_missing
+end
+
 # write out local settings for db access, etc.
 
 template "#{controller_dir}/deis/local_settings.py" do
@@ -35,7 +48,6 @@ template "#{controller_dir}/deis/local_settings.py" do
   mode 0644
   source 'local_settings.py.erb'
   variables :debug => node.deis.controller.debug, 
-            :secret_key => node.deis.controller.secret_key,
             :db_name => node.deis.database.name,
             :db_user => node.deis.database.user
   subscribes :create, "git[#{controller_dir}]", :immediately

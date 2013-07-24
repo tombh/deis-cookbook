@@ -26,7 +26,6 @@ default.deis.database.user = 'deis'
 default.deis.controller.dir = '/opt/deis/controller'
 default.deis.controller.repository = 'https://github.com/opdemand/deis.git'
 default.deis.controller.revision = 'master'
-default.deis.controller.secret_key = 'atotallysecretkey9876543210!'
 default.deis.controller.debug = 'False'
 default.deis.controller.workers = 4
 default.deis.controller.worker_port = 8000
