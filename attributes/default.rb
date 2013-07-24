@@ -21,13 +21,9 @@ default.deis.build.slug_dir = '/opt/deis/build/slugs'
 default.deis.database.name = 'deis'
 default.deis.database.user = 'deis'
 
-# registry
-default.deis.registry.dir = '/opt/deis/registry'
-default.deis.registry.repository = 'https://github.com/dynport/docker-private-registry'
-
 # server/api
 default.deis.controller.dir = '/opt/deis/controller'
-default.deis.controller.repository = 'https://github.com/opdemand/deis-controller.git'
+default.deis.controller.repository = 'https://github.com/opdemand/deis.git'
 default.deis.controller.secret_key = 'atotallysecretkey9876543210!'
 default.deis.controller.debug = 'False'
 default.deis.controller.workers = 4
