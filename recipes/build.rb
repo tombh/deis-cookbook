@@ -10,6 +10,7 @@ git build_dir do
   user username
   group group
   repository node.deis.build.repository
+  revision node.deis.build.revision
   action :sync
 end
 

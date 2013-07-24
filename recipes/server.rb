@@ -17,6 +17,7 @@ git controller_dir do
   user username
   group group
   repository node.deis.controller.repository
+  revision node.deis.controller.revision
   action :sync
 end
 
