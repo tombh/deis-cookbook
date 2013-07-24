@@ -37,7 +37,8 @@ file "#{controller_dir}/.secret_key" do
   group group
   mode 0600
   content SecureRandom.base64(128)
-  action :create_if_missing
+  action :nothing
+  subscribes :create_if_missing, "git[#{controller_dir}]", :immediately
 end
 
 # write out local settings for db access, etc.
