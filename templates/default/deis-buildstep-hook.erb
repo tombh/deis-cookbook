@@ -69,8 +69,12 @@ if __name__ == '__main__':
     tag = uuid.uuid4().hex[:4]
     image = '{0}:{1}'.format(args.formation, tag)
     try:
+        # create cache dir
+        cache_dir = os.path.join(args.src, 'cache')
+        if not os.path.exists(cache_dir):
+            os.mkdir(cache_dir)
         # build/compile
-        cmd = 'git archive master | <%= @buildstep_dir %>/buildstep {0} {1}'.format(args.formation, tag)
+        cmd = 'git archive master | <%= @buildstep_dir %>/buildstep {0} {1} {2}'.format(args.formation, tag, cache_dir)
         p = subprocess.Popen(cmd, cwd=args.src, shell=True)
         rc = p.wait()
         if rc != 0:
