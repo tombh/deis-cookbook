@@ -29,7 +29,7 @@ bash 'create-buildstep-image' do
 end
 
 template '/usr/local/bin/deis-buildstep-hook' do
-  source 'deis-buildstep-hook.erb'
+  source 'buildstep-hook.erb'
   mode 0755
   variables({
     :buildstep_dir => build_dir,

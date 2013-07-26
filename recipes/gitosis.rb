@@ -25,14 +25,14 @@ user 'git' do
   action :create
 end
 
-# allow git user to trigger build-release-run script during
-# git push build hook
+# allow the git user to run a hook that creates
+# a new build & release via local python code
 
 sudo 'git' do
   user  'git'
   runas node.deis.username
   nopasswd  true
-  commands [ node.deis.controller.dir + '/bin/build-release-run' ]
+  commands [ node.deis.controller.dir + '/bin/push-hook' ]
 end
 
 # synchronize the gitosis repository
