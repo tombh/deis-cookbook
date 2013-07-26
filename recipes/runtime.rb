@@ -3,7 +3,6 @@ include_recipe 'deis::docker'
 username = node.deis.username
 group = node.deis.group
 home = node.deis.dir
-image = node.deis.runtime.image
 
 directory node.deis.runtime.dir do
   user username
@@ -26,7 +25,7 @@ formations.each do |f|
   formation = data_bag_item('deis-formations', f)
 
   # skip this node if it's not configured as a proxy
-  next if ! formation['nodes']['backends'].keys.include? node.name
+  next if ! formation['nodes']['runtime'].keys.include? node.name
   
   id = formation['id']
   version = formation['release']['version']

@@ -144,9 +144,10 @@ if __name__ == '__main__':
     sys.stdout.flush()
     puts_line()
     puts_step("{args.formation} deployed to Deis".format(**locals()))
-    proxies = databag['nodes']['proxies'].values()
+    proxies = databag['nodes'].get('proxy', {}).values()
     if proxies:
         for proxy_fqdn in proxies:
             puts("http://{proxy_fqdn}\n".format(**locals()))
     else:
-        puts('No proxies found, use `deis scale proxies=N backends=N` to scale your formation\n\n')
+        puts('No proxies found.')
+        puts('Use `deis layers:scale proxy=1 runtime=1` to scale a basic formation\n\n')

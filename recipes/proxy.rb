@@ -18,7 +18,7 @@ formations.each do |f|
   formation = data_bag_item('deis-formations', f)
   
   # skip this node if it's not configured as a proxy
-  next if ! formation['nodes']['proxies'].keys.include? node.name
+  next if ! formation['nodes']['proxy'].keys.include? node.name
   
   proxy = formation['proxy']
   
