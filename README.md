@@ -1,19 +1,23 @@
-Deis Cookbook
-=============
+# Deis Cookbook
 The [opdemand/deis-cookbook](https://github.com/opdemand/deis-chef) project
-contains OpsCode Chef recipes for provisioning Deis nodes.
+contains Chef recipes for provisioning Deis nodes.
 To get started with your own private PaaS, check out the
 [Deis](https://github.com/opdemand/deis) project.
 
+[![Build Status](https://travis-ci.org/opdemand/deis.png)](https://travis-ci.org/opdemand/deis)
+[![Coverage Status](https://coveralls.io/repos/opdemand/deis/badge.png?branch=master)](https://coveralls.io/r/opdemand/deis?branch=master)
+
 ## What is Deis?
-Deis is an open source PaaS inspired by Heroku, that makes it easy to deploy and scale LXC containers used to host applications, databases, middleware and other services.  Deis leverages Docker, Chef and Heroku Buildpacks to provide a private PaaS that is lightweight and flexible.Deis comes with out-of-the-box support for Ruby, Python, Node.js, Java, Clojure, PHP, Dart and Go.  However, Deis can deploy *anything* using Heroku Buildpacks or pre-built Docker images.  Containers can be deployed to any cloud provider, although only EC2 is currently supported.## Why Deis?##### Deploy anything
-Leverage Heroku Buildpacks to deploy a wide range of languages and frameworks with a simple "git push" or create custom Docker images to deploy pre-built apps, databases and other services.
+Deis is an open source PaaS that makes it easy to deploy and scale LXC containers and Chef nodes used to host applications, databases, middleware and other services. Deis leverages Chef, Docker and Heroku Buildpacks to provide a private PaaS that is lightweight and flexible.Deis comes with out-of-the-box support for Ruby, Python, Node.js, Java, Clojure, Scala, Play, PHP, Perl, Dart and Go.  However, Deis can deploy *anything* using Heroku Buildpacks, pre-built Docker images or Chef recipes.  Deis can be deployed to any cloud provider, although only EC2 is currently supported.## Why Deis?##### Deploy anything
+
+Deploy a wide range of languages and frameworks with a simple "git push" using [Heroku Buildpacks](https://devcenter.heroku.com/articles/buildpacks) or [Dockerfiles](http://docs.docker.io/en/latest/use/builder/).  Use custom Chef layers to deploy databases, middleware and other add-on services.
 ##### Control everything
-Choose your hosting providers.  Define your application formations.  Scale nodes and containers independently.  Control your routing layer.  Manage the entire platform with a private Deis controller.
+Choose your hosting providers.  Define a "formation" with custom proxy and runtime layers.  Scale nodes and containers independently.  Manage the entire platform with a private Deis controller.
 ##### Scale effortlessly
-Scale nodes, containers and proxies with a single command.  Node provisioning is transparent, container formations are rebalanced automatically and proxies are updated to re-route traffic without downtime.
+Scale nodes and containers with a single command.  Provisioning is transparent, container formations are rebalanced automatically and proxies are updated to re-route traffic without downtime.
 ##### 100% Open Source
-Free, transparent and easily customized.  Join the open-source PaaS and DevOps community by using Deis and complimentary projects like Docker, Chef and Heroku Buildpacks.
+Free, transparent and easily customized.  Join the open-source PaaS and DevOps community by using Deis and complimentary projects like Docker, Chef and Heroku Buildpacks.## Getting Started
+Coming Soon!
 
 ## Requirements
 
