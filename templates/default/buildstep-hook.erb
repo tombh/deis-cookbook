@@ -138,7 +138,7 @@ if __name__ == '__main__':
     if rc != 0:
         raise RuntimeError('Build error {0}'.format(stderr))
     databag = json.loads(stdout)
-    sys.stdout.write("done\n")
+    sys.stdout.write("done, v{}\n".format(databag['release']['version']))
     sys.stdout.flush()
     puts_line()
     puts_step("{args.formation} deployed to Deis".format(**locals()))
