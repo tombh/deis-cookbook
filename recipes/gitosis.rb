@@ -75,7 +75,11 @@ end
 
 # try to load the gitosis data bag item
 
-gitosis = data_bag_item('deis-build', 'gitosis')
+begin
+  gitosis = data_bag_item('deis-build', 'gitosis')
+rescue
+  return
+end
 
 # create ssh keys
 
