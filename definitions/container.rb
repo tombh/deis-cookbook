@@ -13,7 +13,7 @@ define :container, :c_type => nil, :c_num => nil, :env => {}, :command => '', :p
   
   # see if service should be enabled or disabled
   if params[:enable] == true
-    actions = [:start, :enable]
+    actions = [:enable]
     on_change = :restart
   else
     actions = [:stop, :disable]
