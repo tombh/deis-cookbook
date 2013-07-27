@@ -31,7 +31,7 @@ server {
     
     # serve up application slugs from build system
     location /slugs/ {
-    	autoindex on;
+    	autoindex off;
     	alias <%= @slug_root %>/;
     }
 
