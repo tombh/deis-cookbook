@@ -4,9 +4,6 @@ contains Chef recipes for provisioning Deis nodes.
 To get started with your own private PaaS, check out the
 [Deis](https://github.com/opdemand/deis) project.
 
-[![Build Status](https://travis-ci.org/opdemand/deis.png)](https://travis-ci.org/opdemand/deis)
-[![Coverage Status](https://coveralls.io/repos/opdemand/deis/badge.png?branch=master)](https://coveralls.io/r/opdemand/deis?branch=master)
-
 ![Deis Graphic](https://s3-us-west-2.amazonaws.com/deis-images/deis-graphic.png)
 
 ## What is Deis?
