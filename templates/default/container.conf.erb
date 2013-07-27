@@ -17,7 +17,7 @@ setuid root
 setgid root
 
 script
-  exec docker run -p :<%= @port %> -e PORT=<%= @port %> <% if not @slug_dir.nil? %>-v <%= @slug_dir %>/app:/app<% end %> <% @env.each_pair do |k,v| %> -e <%= k.upcase %>=<%= v %><% end %> <%= @image %> <% if ! @command.nil? %>/bin/sh -c 'cd /app && <%= @command %>'<% end %> > <%= @log_dir %>/<%=@c_type%>-<%= @c_num %>.log 2>&1
+  exec docker run -p :<%= @port %> -e PORT=<%= @port %> <% if not @slug_dir.nil? %>-v <%= @slug_dir %>/app:/app<% end %> <% @env.each_pair do |k,v| %> -e <%= k.upcase %>=<%= v %><% end %> <%= @image %> <% if ! @command.nil? %>/bin/sh -c 'export HOME=/app; cd /app && for profile in `find /app/.profile.d/ -type f`; do . $profile; done && <%= @command %>'<% end %> > <%= @log_dir %>/<%=@c_type%>-<%= @c_num %>.log 2>&1
 end script
 
 post-start script
