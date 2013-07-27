@@ -16,6 +16,30 @@ directory node.deis.runtime.slug_root do
   mode 0700
 end
 
+build_dir = node.deis.build.dir
+
+git build_dir do
+  user username
+  group group
+  repository node.deis.build.repository
+  revision node.deis.build.revision
+  action :sync
+end
+
+directory node.deis.build.slug_dir do
+  user username
+  group group
+  mode 0777 # nginx needs write access
+end
+
+image = node.deis.build.image
+
+bash 'create-buildstep-image' do
+  cwd build_dir
+  code "./build.sh ./stack #{image}"
+  not_if "docker images | grep #{image}"
+end
+
 package 'curl'
 
 formations = data_bag('deis-formations')
@@ -25,6 +49,7 @@ formations.each do |f|
   formation = data_bag_item('deis-formations', f)
 
   # skip this node if it's not configured as a proxy
+  next if ! formation['nodes'].keys.include? 'runtime'
   next if ! formation['nodes']['runtime'].keys.include? node.name
   
   id = formation['id']
