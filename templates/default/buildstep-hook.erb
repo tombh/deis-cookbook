@@ -148,3 +148,7 @@ if __name__ == '__main__':
             puts("http://{proxy_fqdn}\n".format(**locals()))
     else:
         puts('No proxies found, use `deis layers:scale proxy=1 runtime=1` to scale a basic formation\n\n')
+
+	puts_line()
+	puts('To learn more, use `deis help` or visit http://deis.io')
+	puts_line()
