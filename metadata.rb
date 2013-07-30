@@ -1,5 +1,5 @@
 name             'deis'
-maintainer       'OpDemand'
+maintainer       'Gabriel Monroy'
 maintainer_email 'gabriel@opdemand.com'
 license          'Apache 2.0'
 description      'Installs/Configures Deis PaaS'
