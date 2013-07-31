@@ -38,7 +38,8 @@ end
 # synchronize the gitosis repository
 
 git gitosis_checkout do
-  repository 'git://github.com/opdemand/gitosis.git'
+  repository node.deis.gitosis.repository
+  revision node.deis.gitosis.revision
   action :sync
 end
 

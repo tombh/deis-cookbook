@@ -10,6 +10,8 @@ default.deis.runtime.slug_root = '/opt/deis/runtime/slugs'
 
 # gitosis
 default.deis.gitosis.dir = '/opt/deis/gitosis'
+default.deis.gitosis.repository = 'git://github.com/opdemand/gitosis.git'
+default.deis.gitosis.revision = 'master'
 
 # build
 default.deis.build.dir = '/opt/deis/build'
