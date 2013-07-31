@@ -11,7 +11,7 @@ include_recipe 'apt'
 
 apt_repository 'nginx-ppa' do
   uri 'http://ppa.launchpad.net/ondrej/nginx/ubuntu'
-  distribution node['lsb']['codename']
+  distribution node.lsb.codename
   components ['main']
   keyserver 'keyserver.ubuntu.com'
   key 'E5267A6C'

@@ -84,24 +84,27 @@ end
 
 # create ssh keys
 
+processed_keys = []
 gitosis['ssh_keys'].each do |key_name, key_material|
-  file "#{gitosis_key_dir}/#{key_name}.pub" do
+  key_path = "#{gitosis_key_dir}/#{key_name}.pub"
+  file key_path do
     owner 'git'
     group 'git'
     content key_material
     notifies :run, 'bash[git-add-gitosis-admin]'
   end
+  processed_keys.push(key_path)
 end
 
 # purge old ssh keys
 
 Dir.glob("#{gitosis_key_dir}/*.pub").each do |f|
+  next if processed_keys.include? f
   next if f.sub("#{gitosis_key_dir}/", '') == 'gitosis-admin.pub'
-  if !gitosis['ssh_keys'].has_key? f.sub(gitosis_key_dir+'/', '').sub('.pub', '')
-    file f do
-      action :delete
-      notifies :run, 'bash[git-add-gitosis-admin]'
-    end
+  file f do
+    action :delete
+    notifies :run, 'bash[git-add-gitosis-admin]'
+    not_if { gitosis['ssh_keys'].has_key? f.sub(gitosis_key_dir+'/', '').sub('.pub', '') }
   end
 end
 
@@ -158,6 +161,7 @@ end
 
 # create application repositories
 
+processed_dirs = []
 gitosis['formations'].each_pair do |name, ssh_keys|
   dir = "#{gitosis_dir}/repositories/#{name}.git"
   directory dir do
@@ -172,16 +176,17 @@ gitosis['formations'].each_pair do |name, ssh_keys|
     code 'git init --bare'
     not_if "test -e #{dir}/HEAD"
   end
+  processed_dirs.push(dir)
 end
 
 # purge old repository directories
 
 Dir.glob("#{gitosis_dir}/repositories/*.git").each do |d|
+  next if processed_dirs.include? d
   next if d.include? 'gitosis-admin.git'
-  if !gitosis['formations'].has_key? d.sub("#{gitosis_dir}/repositories/", '').sub('.git', '')
-    directory d do
-      action :delete
-      recursive true
-    end
+  directory d do
+    action :delete
+    recursive true
+    not_if { gitosis['formations'].has_key? d.sub("#{gitosis_dir}/repositories/", '').sub('.git', '') }
   end
 end

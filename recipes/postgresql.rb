@@ -10,7 +10,7 @@ template '/etc/postgresql/9.1/main/pg_hba.conf' do
   user 'postgres'
   group 'postgres'
   mode 0640
-  notifies :reload, resources(:service => 'postgresql')
+  notifies :reload, "service[postgresql]"
 end 
 
 template '/etc/postgresql/9.1/main/postgresql.conf' do
@@ -18,7 +18,7 @@ template '/etc/postgresql/9.1/main/postgresql.conf' do
   user 'postgres'
   group 'postgres'
   mode 0644
-  notifies :reload, resources(:service => 'postgresql')
+  notifies :reload, "service[postgresql]"
 end
 
 db_name = node.deis.database.name

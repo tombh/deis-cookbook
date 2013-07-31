@@ -1,5 +1,5 @@
 
-define :container, :c_type => nil, :c_num => nil, :env => {}, :command => '', :port => nil, :image => nil, :slug_dir => nil, :enable => nil, :user => "root" do
+define :container, :c_type => nil, :c_num => nil, :env => {}, :command => '', :port => nil, :image => nil, :slug_dir => nil, :enable => nil, :user => "root" do # ~FC037
   
   # pull out local variables
   c_type = params[:c_type]
@@ -21,7 +21,7 @@ define :container, :c_type => nil, :c_num => nil, :env => {}, :command => '', :p
   end
   
   # create upstart service definition
-  template "/etc/init/#{c_type}.#{c_num}.conf" do
+  template "/etc/init/#{c_type}.#{c_num}.conf" do # ~FC037
     source "container.conf.erb"
     mode 0644
     variables({
