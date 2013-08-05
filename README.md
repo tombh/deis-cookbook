@@ -4,20 +4,6 @@ contains Chef recipes for provisioning Deis nodes.
 To get started with your own private PaaS, check out the
 [Deis](https://github.com/opdemand/deis) project.
 
-![Deis Graphic](https://s3-us-west-2.amazonaws.com/deis-images/deis-graphic.png)
-
-## What is Deis?
-Deis is an open source PaaS that makes it easy to deploy and scale LXC containers and Chef nodes used to host applications, databases, middleware and other services. Deis leverages Chef, Docker and Heroku Buildpacks to provide a private PaaS that is lightweight and flexible.Deis comes with out-of-the-box support for Ruby, Python, Node.js, Java, Clojure, Scala, Play, PHP, Perl, Dart and Go.  However, Deis can deploy *anything* using Heroku Buildpacks, Docker images or Chef recipes.  Deis is designed to work with any cloud provider, although only EC2 is currently supported.## Why Deis?##### Deploy anything
-
-Deploy a wide range of languages and frameworks with a simple "git push" using [Heroku Buildpacks](https://devcenter.heroku.com/articles/buildpacks) or [Dockerfiles](http://docs.docker.io/en/latest/use/builder/).  Use custom Chef layers to deploy databases, middleware and other add-on services.
-##### Control everything
-Choose your hosting providers.  Define a "formation" with custom proxy and runtime layers.  Scale nodes and containers independently.  Manage the entire platform with a private Deis controller.
-##### Scale effortlessly
-Scale nodes and containers with a single command.  Provisioning is transparent, container formations are rebalanced automatically and proxies are updated to re-route traffic without downtime.
-##### 100% Open Source
-Free, transparent and easily customized.  Join the open-source PaaS and DevOps community by using Deis and complimentary projects like Docker, Chef and Heroku Buildpacks.## Getting Started
-Coming Soon!
-
 ## Requirements
 
 The Deis cookbook is designed to work with **Ubuntu 12.04 LTS**.  While other Ubuntu or Debian distros may work, they have not been tested.
