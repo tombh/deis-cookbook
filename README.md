@@ -60,23 +60,6 @@ Just include `deis` in your node's `run_list`:
 }
 ```
 
-Contributing
-------------
-Contributions are always welcome.  We're especially interested in contributions related to:
-
- * Following Chef best practices
- * Making better use of attributes
- * Improving idempotence
- * Extending OS support to other distros
-
-To contribute:
-
-1. Fork this repository
-2. Create a named feature branch (like `add_component_x`)
-3. Commit your change(s) and push them to your branch
-4. Write tests for your change (if applicable)
-5. Submit a Pull Request using Github
-
 License and Authors
 -------------------
 Author:: Gabriel Monroy <gabriel@opdemand.com>
