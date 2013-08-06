@@ -11,12 +11,12 @@ default.deis.runtime.slug_root = '/opt/deis/runtime/slugs'
 # gitosis
 default.deis.gitosis.dir = '/opt/deis/gitosis'
 default.deis.gitosis.repository = 'git://github.com/opdemand/gitosis.git'
-default.deis.gitosis.revision = 'v0.0.4'
+default.deis.gitosis.revision = 'v0.0.5'
 
 # build
 default.deis.build.dir = '/opt/deis/build'
 default.deis.build.repository = 'https://github.com/opdemand/buildstep'
-default.deis.build.revision = 'v0.0.4'
+default.deis.build.revision = 'v0.0.5'
 default.deis.build.image = 'deis/buildstep'
 default.deis.build.slug_dir = '/opt/deis/build/slugs'
 
@@ -27,7 +27,7 @@ default.deis.database.user = 'deis'
 # server/api
 default.deis.controller.dir = '/opt/deis/controller'
 default.deis.controller.repository = 'https://github.com/opdemand/deis.git'
-default.deis.controller.revision = 'master'
+default.deis.controller.revision = 'v0.0.5'
 default.deis.controller.debug = 'False'
 default.deis.controller.workers = 4
 default.deis.controller.worker_port = 8000
