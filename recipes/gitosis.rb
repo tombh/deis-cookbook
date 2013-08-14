@@ -37,6 +37,12 @@ end
 
 # synchronize the gitosis repository
 
+directory gitosis_dir do
+  user 'git'
+  group 'git'
+  mode 0755
+end
+
 git gitosis_checkout do
   repository node.deis.gitosis.repository
   revision node.deis.gitosis.revision
