@@ -58,7 +58,7 @@ def exit_on_error(error_code, msg):
     sys.stderr.write('\n')
     sys.stderr.flush()
     sys.exit(error_code)
-    
+
 if __name__ == '__main__':
     args = parse_args()
     # get sha of master
@@ -119,8 +119,14 @@ if __name__ == '__main__':
     # prepare the push-hook
     push = {'username': args.user, 'formation': args.formation, 'sha': sha, 'checksum': checksum,
             'config': release.get('config_vars', {})}
-    # TODO: figure out better controller fqdn lookup or switch to mandatory S3 hosting
-    ip = json.loads(urllib.urlopen('http://jsonip.com').read())['ip']
+    # Look up FQDN
+    try:
+        # first try an AWS internal service
+        ip = urllib.urlopen('http://169.254.169.254/latest/meta-data/public-ipv4',
+                            timeout=10).read()
+    except urllib.URLError:
+        # fall back to jsonip.com
+        ip = json.loads(urllib.urlopen('http://jsonip.com', timeout=10).read())['ip']
     fqdn = socket.gethostbyaddr(ip)[0]
     push['url'] = "http://{fqdn}/slugs/{args.formation}-{sha}.tar.gz".format(**locals())
     push['procfile'] = procfile
@@ -131,7 +137,7 @@ if __name__ == '__main__':
     # run
     sys.stdout.write("       " + "Launching... ")
     sys.stdout.flush()
-    p = subprocess.Popen(['sudo', '-u', 'deis', '<%= @controller_dir %>/bin/push-hook'], 
+    p = subprocess.Popen(['sudo', '-u', 'deis', '<%= @controller_dir %>/bin/push-hook'],
                          stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
     stdout, stderr = p.communicate(json.dumps(push))
     rc = p.wait()
