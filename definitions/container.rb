@@ -1,7 +1,8 @@
 
-define :container, :c_type => nil, :c_num => nil, :env => {}, :command => '', :port => nil, :image => nil, :slug_dir => nil, :enable => nil, :user => "root" do # ~FC037
+define :container, :c_type => nil, :c_num => nil, :env => {}, :command => '', :port => nil, :image => nil, :slug_dir => nil, :enable => nil, :user => "root", :app_name => nil do # ~FC037
   
   # pull out local variables
+  app_name = params[:app_name]
   c_type = params[:c_type]
   c_num = params[:c_num]
   env = params[:env]
@@ -25,7 +26,7 @@ define :container, :c_type => nil, :c_num => nil, :env => {}, :command => '', :p
     source "container.conf.erb"
     mode 0644
     variables({
-      :log_dir => "/var/log",
+      :app_name => app_name,
       :user => user,
       :image => image,
       :slug_dir => slug_dir,

@@ -1,3 +1,4 @@
+include_recipe 'rsyslog::client'
 include_recipe 'deis::docker'
 
 username = node.deis.username
@@ -120,6 +121,7 @@ formations.each do |f|
       
       # define the container
       container "#{c_type}.#{c_num}" do
+        app_name f
         c_type c_type
         c_num c_num
         env config

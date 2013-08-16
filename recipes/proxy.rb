@@ -6,7 +6,7 @@
 #
 # All rights reserved - Do Not Redistribute
 #
-
+include_recipe 'rsyslog::client'
 include_recipe 'deis::nginx'
 
 # iterate over this node's formation
