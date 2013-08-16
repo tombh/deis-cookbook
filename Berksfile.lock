@@ -8,6 +8,9 @@
     },
     "sudo": {
       "locked_version": "2.1.2"
+    },
+    "rsyslog": {
+      "locked_version": "1.6.0"
     }
   }
 }

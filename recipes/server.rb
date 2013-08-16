@@ -27,6 +27,11 @@ directory controller_dir do
   mode 0755 # need nginx access to static files
 end
 
+directory node.deis.controller.log_dir do
+  user username
+  group group
+  mode 0755
+end
 
 # generate django secret key and write it to disk
 

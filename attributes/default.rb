@@ -33,3 +33,12 @@ default.deis.controller.workers = 4
 default.deis.controller.worker_port = 8000
 default.deis.controller.http_port = 80
 default.deis.controller.https_port = 443
+default.deis.controller.log_dir = '/opt/deis/controller/logs'
+
+# rsyslog
+default['rsyslog']['log_dir'] = '/var/log/rsyslog'
+default['rsyslog']['protocol'] = 'tcp'
+default['rsyslog']['port'] = 514
+default['rsyslog']['server_search'] = 'run_list:recipe\[deis\:\:controller\]'
+default['rsyslog']['per_host_dir'] = '%HOSTNAME%'
+

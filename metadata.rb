@@ -8,3 +8,4 @@ version          '0.0.5'
 
 depends          'apt'
 depends          'sudo'
+depends          'rsyslog'
