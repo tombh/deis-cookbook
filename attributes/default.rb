@@ -4,6 +4,10 @@ default.deis.username = 'deis'
 default.deis.group = 'deis'
 default.deis.log_dir = '/var/log/deis'
 
+# docker
+default.deis.docker.key = '63561DC6'
+default.deis.docker.version = '0.5.3-1'
+
 # runtime
 default.deis.runtime.dir = '/opt/deis/runtime'
 default.deis.runtime.slug_root = '/opt/deis/runtime/slugs'

@@ -6,10 +6,12 @@ apt_repository 'docker-ppa' do
   distribution node.lsb.codename
   components ['main']
   keyserver 'keyserver.ubuntu.com'
-  key '63561DC6'
+  key node['deis']['docker']['key']
 end
 
-package 'lxc-docker'
+package 'lxc-docker' do
+  version node['deis']['docker']['version']
+end
 
 service 'docker' do
   provider Chef::Provider::Service::Upstart  
