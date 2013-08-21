@@ -14,6 +14,7 @@ Deis depends on the following cookbooks:
 
 - `apt` - for managing Ubuntu PPAs
 - `sudo` - for managing /etc/sudoers.d
+- `rsyslog` - for configuring log routing and aggregation
 
 [Berkshelf](http://berkshelf.com) is used for managing cookbook dependencies.
 
@@ -21,47 +22,49 @@ Deis depends on the following cookbooks:
     berks install     # to install cookbooks to the berkshelf directory
     berks upload      # to upload cookbooks to your chef server
 
+# Attributes
+TODO: List Deis cookbook attributes.
 
-Attributes
-----------
-TODO: List you cookbook attributes here.
+# Usage
 
-e.g.
-#### deis::default
-<table>
-  <tr>
-    <th>Key</th>
-    <th>Type</th>
-    <th>Description</th>
-    <th>Default</th>
-  </tr>
-  <tr>
-    <td><tt>['deis']['bacon']</tt></td>
-    <td>Boolean</td>
-    <td>whether to include bacon</td>
-    <td><tt>true</tt></td>
-  </tr>
-</table>
+#### deis::controller
+The controller recipe will create a complete Deis controller on a single node including:
 
-Usage
------
-#### deis::default
-TODO: Write usage instructions for each cookbook.
+ * PostgreSQL database
+ * Django API Server 
+ * RabbitMQ installation
+ * Celery worker service
+ * Nginx site for API 
+ * Gitosis server
+ * Docker daemon
+ * Docker-based build system
+ * Nginx site for hosting build "slugs"
+ * Rsyslog server
 
-e.g.
-Just include `deis` in your node's `run_list`:
+The controller will iterate over the `deis-build` databag and configure gitosis access controls in order to restrict `git push` access to repositories.
 
-```json
-{
-  "name":"my_node",
-  "run_list": [
-    "recipe[deis]"
-  ]
-}
-```
+#### deis::runtime
+The runtime recipe will prepare a node for hosting Docker containers as part of a Deis runtime layer.  This recipe will configure:
 
-License and Authors
--------------------
+ * Docker daemon
+ * Buildstep Docker image
+ * Rsyslog client
+
+The runtime recipe will iterate over the `deis-formations` databag and configure and start upstart daemons for any Docker containers assigned to this node.
+
+#### deis::proxy
+The proxy recipe will prepare a node for routing traffic to containers in a Deis runtime layer.  This recipe will configure:
+
+ * Nginx site
+ * Rsyslog client
+
+The proxy recipe will iterate over the `deis-formations` databag and configure Nginx backends for any Docker containers assigned to a given formation.
+
+### Notes
+
+The destination for rsyslog clients is determined by a Chef search for recipe[deis::controller], and using the `ipaddress` attribute.
+
+# License and Authors
 Author:: Gabriel Monroy <gabriel@opdemand.com>
 
 Copyright:: 2013, OpDemand LLC
