@@ -1,4 +1,4 @@
-define :container, :c_type => nil, :c_num => nil, :env => {}, :command => '', :port => nil, :image => nil, :slug_dir => nil, :enable => nil, :user => "root", :app_name => nil do # ~FC037
+define :container, :c_type => nil, :c_num => nil, :env => {}, :command => '', :port => nil, :image => nil, :slug_dir => nil, :enable => nil, :app_name => nil do # ~FC037
   
   # pull out local variables
   app_name = params[:app_name]
@@ -9,7 +9,6 @@ define :container, :c_type => nil, :c_num => nil, :env => {}, :command => '', :p
   port = params[:port]
   image = params[:image]
   slug_dir = params[:slug_dir]
-  user = params[:user]
   
   # see if service should be enabled or disabled
   if params[:enable] == true
