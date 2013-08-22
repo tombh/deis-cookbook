@@ -1,4 +1,3 @@
-
 define :container, :c_type => nil, :c_num => nil, :env => {}, :command => '', :port => nil, :image => nil, :slug_dir => nil, :enable => nil, :user => "root", :app_name => nil do # ~FC037
   
   # pull out local variables
@@ -27,7 +26,6 @@ define :container, :c_type => nil, :c_num => nil, :env => {}, :command => '', :p
     mode 0644
     variables({
       :app_name => app_name,
-      :user => user,
       :image => image,
       :slug_dir => slug_dir,
       :env => env,
