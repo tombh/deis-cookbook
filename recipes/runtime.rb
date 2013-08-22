@@ -130,7 +130,6 @@ formations.each do |f|
         image image
         slug_dir slug_dir
         enable enabled
-        user username
       end      
   
     end
