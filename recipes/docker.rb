@@ -1,12 +1,11 @@
 
 include_recipe 'apt'
 
-apt_repository 'docker-ppa' do
-  uri 'http://ppa.launchpad.net/dotcloud/lxc-docker/ubuntu'
-  distribution node.lsb.codename
+apt_repository 'dotcloud' do
+  key node['deis']['docker']['key_url']
+  uri node['deis']['docker']['deb_url']
+  distribution 'docker'
   components ['main']
-  keyserver 'keyserver.ubuntu.com'
-  key node['deis']['docker']['key']
 end
 
 package 'lxc-docker' do
