@@ -190,7 +190,7 @@ gitosis['formations'].each_pair do |name, ssh_keys|
     group 'git'
     mode 0750
   end
-  bash 'gitosis-init-bare-app' do
+  bash "gitosis-init-bare-#{name}" do
     user 'git'
     group 'git'
     cwd dir
