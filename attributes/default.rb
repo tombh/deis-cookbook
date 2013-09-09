@@ -32,7 +32,7 @@ default.deis.database.user = 'deis'
 # server/api
 default.deis.controller.dir = '/opt/deis/controller'
 default.deis.controller.repository = 'https://github.com/opdemand/deis.git'
-default.deis.controller.revision = 'master'
+default.deis.controller.revision = 'application-refactor'
 default.deis.controller.debug = 'False'
 default.deis.controller.workers = 4
 default.deis.controller.worker_port = 8000
