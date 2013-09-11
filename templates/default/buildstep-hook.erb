@@ -31,8 +31,8 @@ Note this script must be run as the `git` user.
         sys.exit(1)
     args = parser.parse_args()
     args.src = os.path.abspath(args.src)
-    # store formation ID
-    args.formation = '/'.join(args.src.split(os.path.sep)[-1:]).replace('.git', '')
+    # store app ID
+    args.app = '/'.join(args.src.split(os.path.sep)[-1:]).replace('.git', '')
     return args
 
 def _sizeof_fmt(num):
@@ -65,16 +65,16 @@ if __name__ == '__main__':
     with open(os.path.join(args.src, 'refs/heads/master')) as f:
         sha = f.read().strip('\n')
     # prepare for buildpack run
-    slug_path = os.path.join('<%= @slug_dir %>', '{0}-{1}.tar.gz'.format(args.formation, sha))
+    slug_path = os.path.join('<%= @slug_dir %>', '{0}-{1}.tar.gz'.format(args.app, sha))
     tag = uuid.uuid4().hex[:4]
-    image = '{0}:{1}'.format(args.formation, tag)
+    image = '{0}:{1}'.format(args.app, tag)
     try:
         # create cache dir
         cache_dir = os.path.join(args.src, 'cache')
         if not os.path.exists(cache_dir):
             os.mkdir(cache_dir)
         # build/compile
-        cmd = 'git archive master | <%= @buildstep_dir %>/buildstep {0} {1} {2}'.format(args.formation, tag, cache_dir)
+        cmd = 'git archive master | <%= @buildstep_dir %>/buildstep {0} {1} {2}'.format(args.app, tag, cache_dir)
         p = subprocess.Popen(cmd, cwd=args.src, shell=True)
         rc = p.wait()
         if rc != 0:
@@ -117,7 +117,7 @@ if __name__ == '__main__':
         exit_on_error(rc, 'Could not calculate SHA of slug')
     checksum = p.stdout.read().split(' ')[0]
     # prepare the push-hook
-    push = {'username': args.user, 'formation': args.formation, 'sha': sha, 'checksum': checksum,
+    push = {'username': args.user, 'app': args.app, 'sha': sha, 'checksum': checksum,
             'config': release.get('config_vars', {})}
     # Look up FQDN
     try:
@@ -128,7 +128,7 @@ if __name__ == '__main__':
         # fall back to jsonip.com
         ip = json.loads(urllib.urlopen('http://jsonip.com', timeout=10).read())['ip']
     fqdn = socket.gethostbyaddr(ip)[0]
-    push['url'] = "http://{fqdn}/slugs/{args.formation}-{sha}.tar.gz".format(**locals())
+    push['url'] = "http://{fqdn}/slugs/{args.app}-{sha}.tar.gz".format(**locals())
     push['procfile'] = procfile
     # calculate slug size
     push['size'] = os.stat(slug_path).st_size
@@ -147,13 +147,13 @@ if __name__ == '__main__':
     sys.stdout.write("done, v{}\n".format(databag['release']['version']))
     sys.stdout.flush()
     puts_line()
-    puts_step("{args.formation} deployed to Deis".format(**locals()))
+    puts_step("{args.app} deployed to Deis".format(**locals()))
     proxies = databag['nodes'].get('proxy', {}).values()
     if proxies:
         for proxy_fqdn in proxies:
             puts("http://{proxy_fqdn}\n".format(**locals()))
     else:
-        puts('No proxies found, use `deis layers:scale proxy=1 runtime=1` to scale a basic formation\n\n')
+        puts('No proxy nodes found for this formation, ask your Deis administrator to create one\n\n')
 
     puts_line()
     puts('To learn more, use `deis help` or visit http://deis.io')
