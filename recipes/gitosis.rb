@@ -95,41 +95,80 @@ bash 'git-clone-gitosis-admin' do
   not_if "test -e #{gitosis_admin_checkout}"
 end
 
-# try to load the gitosis data bag item
+# use the deis-users databag to construct a directory of ssh keys:
+# perms['users'][username] => [ {username}_{key1}, {username}_{key2} ]
 
-begin
-  gitosis = data_bag_item('deis-build', 'gitosis')
-rescue
-  return
-end
+perms = {'users' => {}, 'apps' => {}}
+key_paths = []  # keep track of valid key paths for purge
 
-# create ssh keys
-
-processed_keys = []
-gitosis['ssh_keys'].each do |key_name, key_material|
-  key_path = "#{gitosis_key_dir}/#{key_name}.pub"
-  file key_path do
-    owner 'git'
-    group 'git'
-    content key_material
-    notifies :run, 'bash[git-add-gitosis-admin]'
+data_bag('deis-users').each do |username|
+  user = data_bag_item('deis-users', username)
+  perms['users'][username] = []
+  user['ssh_keys'].each do |key_id, key_material|
+    key_name = "#{username}_#{key_id}"
+    key_path = "#{gitosis_key_dir}/#{key_name}.pub"
+    file key_path do
+      owner 'git'
+      group 'git'
+      content key_material
+      notifies :run, 'bash[git-commit-gitosis-admin]'
+    end
+    perms['users'][username].push(key_name)
+    key_paths.push(key_path)
   end
-  processed_keys.push(key_path)
 end
 
 # purge old ssh keys
 
 Dir.glob("#{gitosis_key_dir}/*.pub").each do |f|
-  next if processed_keys.include? f
-  next if f.sub("#{gitosis_key_dir}/", '') == 'gitosis-admin.pub'
+  next if key_paths.include? f
+  next if f.sub("#{gitosis_key_dir}/", '') == 'gitosis-admin.pub' 
   file f do
     action :delete
-    notifies :run, 'bash[git-add-gitosis-admin]'
-    not_if { gitosis['ssh_keys'].has_key? f.sub(gitosis_key_dir+'/', '').sub('.pub', '') }
+    notifies :run, 'bash[git-commit-gitosis-admin]'
   end
 end
 
-# configure gitosis
+# use the deis-apps databag to build list of perms:
+# perms['apps'][app_id] => [ {user1}_{key1}, {user1}_{key2}, {user2}_{key1} ]
+
+repo_dirs = [] # keep track of valid repo dirs for purge
+
+data_bag('deis-apps').each do |app_id|
+  app = data_bag_item('deis-apps', app_id)
+  perms['apps'][app_id] = []
+  app['users'].each do |username, role|
+    dir = "#{gitosis_dir}/repositories/#{app_id}.git"
+    directory dir do
+      user 'git'
+      group 'git'
+      mode 0750
+    end
+    bash "gitosis-init-bare-#{app_id}" do
+      user 'git'
+      group 'git'
+      cwd dir
+      code 'git init --bare'
+      not_if "test -e #{dir}/HEAD"
+    end
+    perms['apps'][app_id].concat(perms['users'][username])
+    repo_dirs.push(dir)
+  end
+end
+
+# purge old repository directories
+
+Dir.glob("#{gitosis_dir}/repositories/*.git").each do |d|
+  next if repo_dirs.include? d
+  next if d.include? 'gitosis-admin.git'
+  directory d do
+    action :delete
+    recursive true
+  end
+end
+
+# rebuild the gitosis template using a complex git workflow
+# TODO: replace with a more effecient git auth backend
 
 template "#{gitosis_admin_checkout}/gitosis.conf" do
   user 'git'
@@ -137,17 +176,8 @@ template "#{gitosis_admin_checkout}/gitosis.conf" do
   source 'gitosis.conf.erb'
   variables({
     :admins => ['gitosis-admin'],
-    :formations => gitosis['formations'],
+    :apps => perms['apps'],
   })
-  notifies :run, 'bash[git-add-gitosis-admin]'
-end
-
-bash 'git-add-gitosis-admin' do
-  user 'git'
-  group 'git'
-  cwd gitosis_admin_checkout
-  code 'git add .'
-  action :nothing
   notifies :run, 'bash[git-commit-gitosis-admin]'
 end
 
@@ -155,7 +185,7 @@ bash 'git-commit-gitosis-admin' do
   user 'git'
   group 'git'
   cwd gitosis_admin_checkout
-  code 'git commit -m "auto-update via chef"'
+  code 'git add . && git commit -a -m "auto-update via chef"'
   action :nothing
   notifies :run, 'bash[git-push-gitosis-admin]'
 end
@@ -169,8 +199,6 @@ bash 'git-push-gitosis-admin' do
   notifies :run, 'bash[gitosis-update-hook]'
 end
 
-# TODO: figure out why this needs to be run manually
-# after pushing to the gitosis-admin repo
 bash 'gitosis-update-hook' do
   user 'git'
   group 'git'
@@ -178,36 +206,4 @@ bash 'gitosis-update-hook' do
   code 'gitosis-run-hook post-update'
   environment 'GIT_DIR' => gitosis_admin_repo, 'HOME' => gitosis_dir
   action :nothing
-end
-
-# create application repositories
-
-processed_dirs = []
-gitosis['formations'].each_pair do |name, ssh_keys|
-  dir = "#{gitosis_dir}/repositories/#{name}.git"
-  directory dir do
-    user 'git'
-    group 'git'
-    mode 0750
-  end
-  bash "gitosis-init-bare-#{name}" do
-    user 'git'
-    group 'git'
-    cwd dir
-    code 'git init --bare'
-    not_if "test -e #{dir}/HEAD"
-  end
-  processed_dirs.push(dir)
-end
-
-# purge old repository directories
-
-Dir.glob("#{gitosis_dir}/repositories/*.git").each do |d|
-  next if processed_dirs.include? d
-  next if d.include? 'gitosis-admin.git'
-  directory d do
-    action :delete
-    recursive true
-    not_if { gitosis['formations'].has_key? d.sub("#{gitosis_dir}/repositories/", '').sub('.git', '') }
-  end
 end
