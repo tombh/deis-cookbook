@@ -126,7 +126,7 @@ formations.each do |f|
         
         # define the container
         container "#{c_type}.#{c_num}" do
-          app_name f
+          app_name app_id
           c_type c_type
           c_num c_num
           env config
