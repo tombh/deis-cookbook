@@ -13,7 +13,8 @@ setuid deis
 setgid deis
 
 # set environment variables
-env DJANGO_HOME=<%= @home %>
+env HOME=<%= @home %>
+env DJANGO_HOME=<%= @django_home %>
 
 script
 cd $DJANGO_HOME

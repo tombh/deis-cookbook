@@ -1,6 +1,6 @@
 
 <% if @backends.length > 0 %>
-upstream <%= @formation %>-backends {
+upstream <%= @app %>-containers {
 	<% if @algorithm == "least_conn" %>
 	# route requests based on least number of connections
 	# see http://nginx.org/en/docs/http/ngx_http_upstream_module.html#least_conn
@@ -21,14 +21,13 @@ upstream <%= @formation %>-backends {
 <% end %>
 
 server {
-	listen <%= @port %> default_server;
+	listen <%= @port %>;
 
-	# Make site accessible from http://localhost/
-	server_name localhost;
+	server_name <%= @server_name %>;
 
 	<% if @backends.length > 0 %>
 	location / {
-		proxy_pass http://<%= @formation %>-backends;
+		proxy_pass http://<%= @app %>-containers;
 		<% if @firewall %>
 		# Nginx Anti XSS & SQL Injection (Web Application Firewall)
 		# see https://code.google.com/p/naxsi/ for more info

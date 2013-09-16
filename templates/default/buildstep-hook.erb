@@ -148,7 +148,7 @@ if __name__ == '__main__':
     sys.stdout.flush()
     puts_line()
     puts_step("{args.app} deployed to Deis".format(**locals()))
-    proxies = databag['proxy'].get('nodes', [])
+    proxies = databag.get('proxies', [])
     if proxies:
         for proxy_fqdn in proxies:
             puts("http://{proxy_fqdn}\n".format(**locals()))
