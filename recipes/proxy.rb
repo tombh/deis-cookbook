@@ -24,9 +24,14 @@ formations.each do |f|
   next if formation['nodes'][node.name]['proxy'] != true
   
   formation['apps'].each_pair do |app_id, app|
-  
+
     proxy = app['proxy']
-    server_name = "#{app_id}.#{formation['domain']}" or 'localhost'
+
+    if formation['domain'].nil?
+      server_name = 'localhost'
+    else
+      server_name = "#{app_id}.#{formation['domain']}"
+    end
     
     vars = {:server_name => server_name,
             :app => app_id,
