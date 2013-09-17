@@ -148,10 +148,10 @@ if __name__ == '__main__':
     sys.stdout.flush()
     puts_line()
     puts_step("{args.app} deployed to Deis".format(**locals()))
-    proxies = databag.get('proxies', [])
-    if proxies:
-        for proxy_fqdn in proxies:
-            puts("http://{proxy_fqdn}\n".format(**locals()))
+    domains = databag.get('domains', [])
+    if domains:
+        for domain in domains:
+            puts("http://{domain}\n".format(**locals()))
     else:
         puts('No proxy nodes found for this formation, ask your Deis administrator to create one\n')
 
