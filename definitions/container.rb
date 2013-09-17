@@ -1,6 +1,7 @@
 define :container, :c_type => nil, :c_num => nil, :env => {}, :command => '', :port => nil, :image => nil, :slug_dir => nil, :enable => nil, :app_name => nil do # ~FC037
   
   # pull out local variables
+  name = params[:name]
   app_name = params[:app_name]
   c_type = params[:c_type]
   c_num = params[:c_num]
@@ -20,7 +21,7 @@ define :container, :c_type => nil, :c_num => nil, :env => {}, :command => '', :p
   end
   
   # create upstart service definition
-  template "/etc/init/#{c_type}.#{c_num}.conf" do # ~FC037
+  template "/etc/init/#{name}.conf" do # ~FC037
     source "container.conf.erb"
     mode 0644
     variables({
@@ -34,12 +35,12 @@ define :container, :c_type => nil, :c_num => nil, :env => {}, :command => '', :p
       :c_num => c_num
     })
     # stop the service to force job definition reload
-    notifies :stop, "service[#{c_type}.#{c_num}]", :immediately
-    notifies on_change, "service[#{c_type}.#{c_num}]", :delayed
+    notifies :stop, "service[#{name}]", :immediately
+    notifies on_change, "service[#{name}]", :delayed
   end
   
   # define an upstart daemon as enabled or disabled
-  service "#{c_type}.#{c_num}" do
+  service "#{name}" do
     provider Chef::Provider::Service::Upstart
     action actions
   end

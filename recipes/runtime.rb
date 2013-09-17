@@ -33,18 +33,17 @@ directory node.deis.build.slug_dir do
   mode 0777 # nginx needs write access
 end
 
-image = node.deis.build.image
-
 bash 'create-buildstep-image' do
   cwd build_dir
-  code "./build.sh ./stack #{image}"
-  not_if "docker images | grep #{image}"
+  code "make"
+  not_if "docker images | grep #{node.deis.build.image}"
 end
 
 package 'curl'
 
 formations = data_bag('deis-formations')
 
+services = []
 formations.each do |f|
   
   formation = data_bag_item('deis-formations', f)
@@ -63,7 +62,8 @@ formations.each do |f|
     version = app['release']['version']
     build = app['release']['build']
     config = app['release']['config']
-    image = app['release']['image']
+    
+    image = app['release']['build']['image']
     
     # pull the image if it doesn't exist already
     
@@ -116,16 +116,15 @@ formations.each do |f|
         else
           enabled = false
         end
-        
         # determine build command, if one exists
         if build != {}
           command = build['procfile'][c_type]
         else
           command = nil # assume command baked into docker image
         end
-        
+        service_name = "deis-#{app_id}.#{c_type}.#{c_num}"
         # define the container
-        container "#{c_type}.#{c_num}" do
+        container service_name do
           app_name app_id
           c_type c_type
           c_num c_num
@@ -135,39 +134,25 @@ formations.each do |f|
           image image
           slug_dir slug_dir
           enable enabled
-        end      
-    
+        end
+        services.push(service_name)
       end
-      
-      # cleanup any old containers that match this process type
-      (1..100).each { |n|
-        
-        # skip this c_num if we already processed it
-        unless c_formation.has_key?(n.to_s)
-          filename = "/etc/init/#{c_type}.#{n}.conf"
-          
-          # see if the upstart service exists
-          if File.exist?(filename) or File.exist?(filename+".old")
-          
-            # stop and disable it
-            service "#{c_type}.#{n}" do
-              provider Chef::Provider::Service::Upstart
-              action [:stop, :disable]
-            end
-            
-            # delete the service definition and any *.old files
-            [ filename, "#{filename}.old"].each { |fl|
-                file fl do
-                  action :delete
-                end
-              }
-            end
-          end
-        }
-      
     end
-    
   end # formations['apps'].each
-  
 end # formations.each
 
+# purge old container services
+
+Dir.glob("/etc/init/deis-*").each do |path|
+  svc = File.basename(path, '.conf')
+  next if svc.start_with? 'deis-server'
+  next if svc.start_with? 'deis-worker'
+  next if services.include? svc
+  service svc do
+    provider Chef::Provider::Service::Upstart
+    action [:stop, :disable]
+  end
+  file path do
+    action :delete
+  end
+end
