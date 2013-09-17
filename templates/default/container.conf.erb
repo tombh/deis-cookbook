@@ -14,22 +14,3 @@ setgid root
 script
   exec docker run -p :<%= @port %> -e PORT=<%= @port %> <% if not @slug_dir.nil? %>-v <%= @slug_dir %>/app:/app<% end %> <% @env.each_pair do |k,v| %> -e <%= k.upcase %>='<%= v %>'<% end %> <%= @image %> <% if ! @command.nil? %>/bin/sh -c 'export HOME=/app; cd /app && for profile in `find /app/.profile.d/*.sh -type f`; do . $profile; done && <%= @command %>'<% end %> | logger -p local0.info -t <%= @app_name %>[<%=@c_type%>.<%= @c_num %>]
 end script
-
-# until docker implements a straightforward fork/exec mode
-# we're stuck with this pidfile workaround garbage
-
-post-start script
-  for attempt in 1 2 3 4 5; do
-    CONTAINER_ID=$(docker ps | grep "<%= @port %>-><%= @port %>" | awk {'print $1'})
-    if [ ! -z $CONTAINER_ID ]; then
-      echo $CONTAINER_ID > /var/run/<%= @c_type %>.<%= @c_num %>.container
-      exit 0
-    fi
-  done
-  exit 1
-end script
-
-post-stop script
-  docker kill $(cat /var/run/<%= @c_type %>.<%= @c_num %>.container)
-  rm -f /var/run/<%= @c_type %>.<%= @c_num %>.container
-end script
