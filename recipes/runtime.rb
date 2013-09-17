@@ -67,7 +67,7 @@ formations.each do |f|
     
     # pull the image if it doesn't exist already
     
-    bash "pull-image-#{image}" do
+    bash "pull-image-#{app_id}" do
       cwd node.deis.runtime.dir
       code "docker pull #{image}"
       not_if "docker images | grep #{image}"
@@ -109,13 +109,8 @@ formations.each do |f|
       
         nodename, port = node_port.split(':')
         
-        # if the nodename doesn't match don't enable the process
-        # but still define it and leave it disabled
-        if nodename == node.name
-          enabled = true
-        else
-          enabled = false
-        end
+        next if nodename != node.name
+
         # determine build command, if one exists
         if build != {}
           command = build['procfile'][c_type]
@@ -133,7 +128,6 @@ formations.each do |f|
           port port
           image image
           slug_dir slug_dir
-          enable enabled
         end
         services.push(service_name)
       end
