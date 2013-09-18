@@ -21,8 +21,9 @@ package 'nginx'
 
 link '/etc/nginx/sites-enabled/default' do
   action :delete
+  notifies :restart, "service[nginx]", :delayed
 end
 
 service 'nginx' do
-  action [:start, :enable]  
+  action [:enable]
 end

@@ -13,7 +13,8 @@ setuid deis
 setgid deis
 
 # set environment variables
-env DJANGO_HOME=<%= @home %>
+env HOME=<%= @home %>
+env DJANGO_HOME=<%= @django_home %>
 env DJANGO_PORT=<%= @port %>
 env DJANGO_BIND=<%= @bind %>
 env DJANGO_WORKERS=<%= @workers %>

@@ -35,7 +35,8 @@ sudo username do
   commands ['/usr/bin/chef-client',
             '/bin/cat /etc/chef/client.pem',
             '/bin/cat /etc/chef/validation.pem',
-            '/sbin/restart deis']
+            '/sbin/restart deis-server',
+            '/sbin/restart deis-worker',]
 end
 
 # create a log directory writeable by the deis user
