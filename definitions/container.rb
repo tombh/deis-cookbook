@@ -1,7 +1,7 @@
 define :container, :c_type => nil, :c_num => nil, :env => {}, :command => '', :port => nil, :image => nil, :slug_dir => nil, :app_name => nil do # ~FC037
-  
+
   name = params[:name]
-  
+
   # create upstart service definition
   template "/etc/init/#{name}.conf" do # ~FC037
     source "container.conf.erb"
@@ -12,7 +12,7 @@ define :container, :c_type => nil, :c_num => nil, :env => {}, :command => '', :p
       :slug_dir => params[:slug_dir],
       :env => params[:env],
       :port => params[:port],
-      :command => params[:command],     
+      :command => params[:command],
       :c_type => params[:c_type],
       :c_num => params[:c_num],
     })
@@ -20,11 +20,11 @@ define :container, :c_type => nil, :c_num => nil, :env => {}, :command => '', :p
     notifies :stop, "service[#{name}]", :immediately
     notifies :restart, "service[#{name}]", :delayed
   end
-  
+
   # define an upstart daemon as enabled or disabled
   service "#{name}" do
     provider Chef::Provider::Service::Upstart
-    action :enable
+    action [:start, :enable]
   end
 
 end
