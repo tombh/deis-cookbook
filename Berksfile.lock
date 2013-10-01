@@ -4,13 +4,13 @@
       "path": "."
     },
     "apt": {
-      "locked_version": "2.0.0"
-    },
-    "sudo": {
       "locked_version": "2.1.2"
     },
     "rsyslog": {
-      "locked_version": "1.6.0"
+      "locked_version": "1.8.0"
+    },
+    "sudo": {
+      "locked_version": "2.2.0"
     }
   }
 }
