@@ -18,13 +18,12 @@ define :container, :c_type => nil, :c_num => nil, :env => {}, :command => '', :p
     })
     # stop the service to force job definition reload
     notifies :stop, "service[#{name}]", :immediately
-    notifies :restart, "service[#{name}]", :delayed
   end
 
   # define an upstart daemon as enabled or disabled
   service "#{name}" do
     provider Chef::Provider::Service::Upstart
-    action [:start, :enable]
+    action [:enable, :start]
   end
 
 end
