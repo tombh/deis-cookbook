@@ -100,7 +100,8 @@ template '/etc/init/deis-server.conf' do
   group 'root'
   mode 0644
   source 'deis-server.conf.erb'
-  variables :home => node.deis.controller.dir,
+  variables :home => node.deis.dir,
+            :django_home => node.deis.controller.dir,
             :port => node.deis.controller.worker_port,
             :bind => '0.0.0.0',
             :workers => node.deis.controller.workers
@@ -118,7 +119,8 @@ template '/etc/init/deis-worker.conf' do
   group 'root'
   mode 0644
   source 'deis-worker.conf.erb'
-  variables :home => node.deis.controller.dir
+  variables :home => node.deis.dir,
+            :django_home => node.deis.controller.dir
   notifies :restart, "service[deis-worker]", :delayed            
 end
 

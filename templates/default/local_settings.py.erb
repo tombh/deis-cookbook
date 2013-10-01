@@ -20,3 +20,9 @@ DEBUG = <%= @debug %>
 # SECURITY: change this to allowed fqdn's to prevent host poisioning attacks
 # see https://docs.djangoproject.com/en/1.5/ref/settings/#std:setting-ALLOWED_HOSTS
 ALLOWED_HOSTS = ['*']
+
+# use Chef configuration management module
+CM_MODULE = 'cm.chef'
+
+# use real provider modules
+PROVIDER_MODULES = ('mock', 'ec2', 'static')

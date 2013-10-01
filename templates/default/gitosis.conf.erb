@@ -5,9 +5,9 @@ build_hook = /usr/local/bin/deis-buildstep-hook
 members = <% @admins.each do |key_name| %><%= key_name %> <% end %>
 writable = gitosis-admin
 
-<% @formations.each_pair do |name, members| %>
-[group <%= name %>]
-members = <% members.each do |key_name| %><%= key_name %> <% end %>
-writable = <%= name %>
+<% @apps.each_pair do |app_id, keys| %>
+[group <%= app_id %>]
+members = <% keys.each do |key| %><%= key %> <% end %>
+writable = <%= app_id %>
 
 <% end %>

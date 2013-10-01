@@ -24,7 +24,7 @@ image = node.deis.build.image
 
 bash 'create-buildstep-image' do
   cwd build_dir
-  code "./build.sh ./stack #{image}"
+  code 'make'
   not_if "docker images | grep #{image}"
 end
 

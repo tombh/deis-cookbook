@@ -1,47 +1,29 @@
-define :container, :c_type => nil, :c_num => nil, :env => {}, :command => '', :port => nil, :image => nil, :slug_dir => nil, :enable => nil, :app_name => nil do # ~FC037
-  
-  # pull out local variables
-  app_name = params[:app_name]
-  c_type = params[:c_type]
-  c_num = params[:c_num]
-  env = params[:env]
-  command = params[:command]
-  port = params[:port]
-  image = params[:image]
-  slug_dir = params[:slug_dir]
-  
-  # see if service should be enabled or disabled
-  if params[:enable] == true
-    actions = [:enable]
-    on_change = :restart
-  else
-    actions = [:stop, :disable]
-    on_change = :nothing
-  end
-  
+define :container, :c_type => nil, :c_num => nil, :env => {}, :command => '', :port => nil, :image => nil, :slug_dir => nil, :app_name => nil do # ~FC037
+
+  name = params[:name]
+
   # create upstart service definition
-  template "/etc/init/#{c_type}.#{c_num}.conf" do # ~FC037
+  template "/etc/init/#{name}.conf" do # ~FC037
     source "container.conf.erb"
     mode 0644
     variables({
-      :app_name => app_name,
-      :image => image,
-      :slug_dir => slug_dir,
-      :env => env,
-      :port => port,
-      :command => command,     
-      :c_type => c_type,
-      :c_num => c_num
+      :app_name => params[:app_name],
+      :image => params[:image],
+      :slug_dir => params[:slug_dir],
+      :env => params[:env],
+      :port => params[:port],
+      :command => params[:command],
+      :c_type => params[:c_type],
+      :c_num => params[:c_num],
     })
     # stop the service to force job definition reload
-    notifies :stop, "service[#{c_type}.#{c_num}]", :immediately
-    notifies on_change, "service[#{c_type}.#{c_num}]", :delayed
+    notifies :stop, "service[#{name}]", :immediately
   end
-  
+
   # define an upstart daemon as enabled or disabled
-  service "#{c_type}.#{c_num}" do
+  service "#{name}" do
     provider Chef::Provider::Service::Upstart
-    action actions
+    action [:enable, :start]
   end
 
 end
