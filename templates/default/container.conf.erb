@@ -17,8 +17,7 @@ end script
 
 # hacky workaround for docker port race condition
 post-stop script
-  port=$(netstat -an | grep LISTEN | egrep '<%= @port %>')
-  while [ "$port" != ""]; do
+  while [ "`netstat -an | grep LISTEN | egrep ':<%= @port %>'`" != "" ]; do
     sleep 1
   done
 end script
