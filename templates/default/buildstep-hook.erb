@@ -62,8 +62,11 @@ def exit_on_error(error_code, msg):
 if __name__ == '__main__':
     args = parse_args()
     # get sha of master
-    with open(os.path.join(args.src, 'refs/heads/master')) as f:
-        sha = f.read().strip('\n')
+    try:
+        with open(os.path.join(args.src, 'refs/heads/master')) as f:
+            sha = f.read().strip('\n')
+    except IOError:
+        exit_on_error(2, 'Could not read the repository SHA--is the refspec correct?')
     # prepare for buildpack run
     slug_path = os.path.join('<%= @slug_dir %>', '{0}-{1}.tar.gz'.format(args.app, sha))
     tag = uuid.uuid4().hex[:4]
