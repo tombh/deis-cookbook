@@ -5,13 +5,20 @@ service 'postgresql' do
   action [ :enable, :start ]
 end
 
+directory '/var/lib/postgresql/9.1/main' do
+  owner 'postgres'
+  group 'postgres'
+  mode 0700
+  action :create
+end
+
 template '/etc/postgresql/9.1/main/pg_hba.conf' do
   source 'pg_hba.conf.erb'
   user 'postgres'
   group 'postgres'
   mode 0640
   notifies :reload, "service[postgresql]"
-end 
+end
 
 template '/etc/postgresql/9.1/main/postgresql.conf' do
   source 'postgresql.conf.erb'
