@@ -5,10 +5,10 @@ service 'postgresql' do
   action [ :enable, :start ]
 end
 
-directory '/var/lib/postgresql/9.1/main' do
+directory '/etc/postgresql/9.1/main' do
   owner 'postgres'
   group 'postgres'
-  mode 0700
+  mode 0755
   action :create
 end
 
