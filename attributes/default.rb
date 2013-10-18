@@ -7,7 +7,7 @@ default.deis.log_dir = '/var/log/deis'
 # docker
 default.deis.docker.key_url = 'https://get.docker.io/gpg'
 default.deis.docker.deb_url = 'https://get.docker.io/ubuntu'
-default.deis.docker.version = '0.6.3'
+default.deis.docker.version = '0.6.4'
 
 # runtime
 default.deis.runtime.dir = '/opt/deis/runtime'
