@@ -21,7 +21,7 @@ default.deis.gitosis.revision = 'master'
 # build
 default.deis.build.dir = '/opt/deis/build'
 default.deis.build.repository = 'https://github.com/opdemand/buildstep'
-default.deis.build.revision = 'master'
+default.deis.build.revision = 'deis'
 default.deis.build.image = 'deis/buildstep'
 default.deis.build.slug_dir = '/opt/deis/build/slugs'
 
