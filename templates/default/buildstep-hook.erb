@@ -62,8 +62,11 @@ def exit_on_error(error_code, msg):
 if __name__ == '__main__':
     args = parse_args()
     # get sha of master
-    with open(os.path.join(args.src, 'refs/heads/master')) as f:
-        sha = f.read().strip('\n')
+    try:
+        with open(os.path.join(args.src, 'refs/heads/master')) as f:
+            sha = f.read().strip('\n')
+    except IOError:
+        exit_on_error(2, 'Could not read the repository SHA--is the refspec correct?')
     # prepare for buildpack run
     slug_path = os.path.join('<%= @slug_dir %>', '{0}-{1}.tar.gz'.format(args.app, sha))
     tag = uuid.uuid4().hex[:4]
@@ -119,16 +122,16 @@ if __name__ == '__main__':
     # prepare the push-hook
     push = {'username': args.user, 'app': args.app, 'sha': sha, 'checksum': checksum,
             'config': release.get('config_vars', {})}
-    # Look up FQDN
+    # Look up IP address of controller
+    # TODO: move this elsewhere, don't look up on every push
     try:
-        # first try an AWS internal service
+        # first try jsonip.com
+        ip = json.loads(urllib.urlopen('http://jsonip.com', timeout=10).read())['ip']
+    except urllib.URLError:
+        # fall back to an AWS internal service
         ip = urllib.urlopen('http://169.254.169.254/latest/meta-data/public-ipv4',
                             timeout=10).read()
-    except urllib.URLError:
-        # fall back to jsonip.com
-        ip = json.loads(urllib.urlopen('http://jsonip.com', timeout=10).read())['ip']
-    fqdn = socket.gethostbyaddr(ip)[0]
-    push['url'] = "http://{fqdn}/slugs/{args.app}-{sha}.tar.gz".format(**locals())
+    push['url'] = "http://{ip}/slugs/{args.app}-{sha}.tar.gz".format(**locals())
     push['procfile'] = procfile
     # calculate slug size
     push['size'] = os.stat(slug_path).st_size

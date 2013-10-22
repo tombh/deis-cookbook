@@ -7,7 +7,7 @@ default.deis.log_dir = '/var/log/deis'
 # docker
 default.deis.docker.key_url = 'https://get.docker.io/gpg'
 default.deis.docker.deb_url = 'https://get.docker.io/ubuntu'
-default.deis.docker.version = '0.6.3'
+default.deis.docker.version = '0.6.4'
 
 # runtime
 default.deis.runtime.dir = '/opt/deis/runtime'
@@ -16,12 +16,12 @@ default.deis.runtime.slug_root = '/opt/deis/runtime/slugs'
 # gitosis
 default.deis.gitosis.dir = '/opt/deis/gitosis'
 default.deis.gitosis.repository = 'git://github.com/opdemand/gitosis.git'
-default.deis.gitosis.revision = 'v0.1.0'
+default.deis.gitosis.revision = 'v0.1.1'
 
 # build
 default.deis.build.dir = '/opt/deis/build'
 default.deis.build.repository = 'https://github.com/opdemand/buildstep'
-default.deis.build.revision = 'v0.1.0'
+default.deis.build.revision = 'v0.1.1'
 default.deis.build.image = 'deis/buildstep'
 default.deis.build.slug_dir = '/opt/deis/build/slugs'
 
@@ -32,7 +32,7 @@ default.deis.database.user = 'deis'
 # server/api
 default.deis.controller.dir = '/opt/deis/controller'
 default.deis.controller.repository = 'https://github.com/opdemand/deis.git'
-default.deis.controller.revision = 'v0.1.0'
+default.deis.controller.revision = 'v0.1.1'
 default.deis.controller.debug = 'False'
 default.deis.controller.workers = 4
 default.deis.controller.worker_port = 8000
