@@ -47,7 +47,8 @@ sudo 'git' do
   user  'git'
   runas node.deis.username
   nopasswd  true
-  commands [ node.deis.controller.dir + '/bin/push-hook' ]
+  commands [ node.deis.controller.dir + '/bin/pre-push-hook',
+             node.deis.controller.dir + '/bin/push-hook', ]
 end
 
 # synchronize the gitosis repository
@@ -122,7 +123,7 @@ end
 
 Dir.glob("#{gitosis_key_dir}/*.pub").each do |f|
   next if key_paths.include? f
-  next if f.sub("#{gitosis_key_dir}/", '') == 'gitosis-admin.pub' 
+  next if f.sub("#{gitosis_key_dir}/", '') == 'gitosis-admin.pub'
   file f do
     action :delete
     notifies :run, 'bash[git-commit-gitosis-admin]'

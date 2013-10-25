@@ -4,12 +4,11 @@ import argparse
 import getpass
 import json
 import os
-import socket
 import subprocess
 import sys
-import urllib2 as urllib
 import uuid
 import yaml
+
 
 def parse_args():
     desc = """
@@ -35,29 +34,35 @@ Note this script must be run as the `git` user.
     args.app = '/'.join(args.src.split(os.path.sep)[-1:]).replace('.git', '')
     return args
 
+
 def _sizeof_fmt(num):
-    for x in ['bytes','KB','MB','GB','TB']:
+    for x in ['bytes', 'KB', 'MB', 'GB', 'TB']:
         if num < 1024.0:
             return "%3.1f %s" % (num, x)
         num /= 1024.0
+
 
 def puts_step(s):
     sys.stdout.write("-----> %s\n" % s)
     sys.stdout.flush()
 
+
 def puts_line():
     sys.stdout.write("\n")
     sys.stdout.flush()
 
+
 def puts(s):
     sys.stdout.write("       " + s)
     sys.stdout.flush()
+
 
 def exit_on_error(error_code, msg):
     sys.stderr.write(msg)
     sys.stderr.write('\n')
     sys.stderr.flush()
     sys.exit(error_code)
+
 
 if __name__ == '__main__':
     args = parse_args()
@@ -77,7 +82,8 @@ if __name__ == '__main__':
         if not os.path.exists(cache_dir):
             os.mkdir(cache_dir)
         # build/compile
-        cmd = 'git archive master | <%= @buildstep_dir %>/buildstep {0} {1} {2}'.format(args.app, tag, cache_dir)
+        cmd = 'git archive master | <%= @buildstep_dir %>/buildstep {0} {1} {2}'.format(
+            args.app, tag, cache_dir)
         p = subprocess.Popen(cmd, cwd=args.src, shell=True)
         rc = p.wait()
         if rc != 0:
@@ -109,7 +115,9 @@ if __name__ == '__main__':
         except YAMLError as e:
             exit_on_error(1, 'Invalid release format: {0}'.format(e))
     finally:
-        p = subprocess.Popen(['docker', 'rmi', image], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        p = subprocess.Popen(
+            ['docker', 'rmi', image],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         rc = p.wait()
         if rc != 0:
             exit_on_error(rc, 'Warning: could not clean up image {0}'.format(image))
@@ -122,15 +130,11 @@ if __name__ == '__main__':
     # prepare the push-hook
     push = {'username': args.user, 'app': args.app, 'sha': sha, 'checksum': checksum,
             'config': release.get('config_vars', {})}
-    # Look up IP address of controller
-    # TODO: move this elsewhere, don't look up on every push
-    try:
-        # first try jsonip.com
-        ip = json.loads(urllib.urlopen('http://jsonip.com', timeout=10).read())['ip']
-    except urllib.URLError:
-        # fall back to an AWS internal service
-        ip = urllib.urlopen('http://169.254.169.254/latest/meta-data/public-ipv4',
-                            timeout=10).read()
+    # TODO: why can't we run this with `sudo -u deis`?
+    output = subprocess.check_output(
+        ['sudo', '-u', 'deis', '<%= @controller_dir %>/bin/pre-push-hook'])
+    data = json.loads(output)
+    ip = data['domain']
     push['url'] = "http://{ip}/slugs/{args.app}-{sha}.tar.gz".format(**locals())
     push['procfile'] = procfile
     # calculate slug size
@@ -156,7 +160,7 @@ if __name__ == '__main__':
         for domain in domains:
             puts("http://{domain}\n".format(**locals()))
     else:
-        puts('No proxy nodes found for this formation, ask your Deis administrator to create one\n')
+        puts('No proxy nodes found for this formation.\n')
 
     puts_line()
     puts('To learn more, use `deis help` or visit http://deis.io')
