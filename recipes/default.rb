@@ -60,4 +60,5 @@ package 'python-setuptools'
 package 'python-pip'
 package 'debootstrap'
 package 'git'
+package 'make'
 
