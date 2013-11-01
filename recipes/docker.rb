@@ -8,12 +8,10 @@ apt_repository 'dotcloud' do
   components ['main']
 end
 
-package 'lxc-docker' do
-  version node['deis']['docker']['version']
-end
+package "lxc-docker-#{node['deis']['docker']['version']}"
 
 service 'docker' do
-  provider Chef::Provider::Service::Upstart  
+  provider Chef::Provider::Service::Upstart
   supports :status => true, :restart => true, :reload => true
   action [ :enable ]
 end
