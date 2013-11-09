@@ -24,6 +24,14 @@ link '/etc/nginx/sites-enabled/default' do
   notifies :restart, "service[nginx]", :delayed
 end
 
+template '/etc/nginx/nginx.conf' do
+  user 'root'
+  group 'root'
+  mode 0644
+  source 'nginx.conf.erb'
+  notifies :restart, "service[nginx]", :delayed
+end
+
 service 'nginx' do
   action [:enable]
 end
