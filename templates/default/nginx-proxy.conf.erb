@@ -28,6 +28,9 @@ server {
 	<% if @backends.length > 0 %>
 	location / {
 		proxy_pass http://<%= @app %>-containers;
+                proxy_set_header        Host            $host;
+                proxy_set_header        X-Real-IP       $remote_addr;
+                proxy_set_header        X-Forwarded-For $proxy_add_x_forwarded_for;
 		<% if @firewall %>
 		# Nginx Anti XSS & SQL Injection (Web Application Firewall)
 		# see https://code.google.com/p/naxsi/ for more info
