@@ -7,7 +7,6 @@ controller_dir = node.deis.controller.dir
 
 package 'python-virtualenv'
 package 'python-dev'
-package 'libevent-dev' # for gevent
 package 'rabbitmq-server' # for celery
 package 'libpq-dev' # for psycopg2
 
