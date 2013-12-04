@@ -18,5 +18,5 @@ env DJANGO_HOME=<%= @django_home %>
 script
 cd $DJANGO_HOME
 . venv/bin/activate
-exec celery worker --app=deis --logfile=/var/log/deis/celeryd.log --loglevel=INFO
+exec celery worker --app=deis --concurrency=8 --logfile=/var/log/deis/celeryd.log --loglevel=INFO
 end script
