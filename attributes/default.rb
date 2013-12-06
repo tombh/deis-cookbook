@@ -7,23 +7,7 @@ default.deis.log_dir = '/var/log/deis'
 # docker
 default.deis.docker.key_url = 'https://get.docker.io/gpg'
 default.deis.docker.deb_url = 'https://get.docker.io/ubuntu'
-default.deis.docker.version = '0.6.4'
-
-# runtime
-default.deis.runtime.dir = '/opt/deis/runtime'
-default.deis.runtime.slug_root = '/opt/deis/runtime/slugs'
-
-# gitosis
-default.deis.gitosis.dir = '/opt/deis/gitosis'
-default.deis.gitosis.repository = 'git://github.com/opdemand/gitosis.git'
-default.deis.gitosis.revision = 'master'
-
-# build
-default.deis.build.dir = '/opt/deis/build'
-default.deis.build.repository = 'https://github.com/opdemand/buildstep'
-default.deis.build.revision = 'deis'
-default.deis.build.image = 'deis/buildstep'
-default.deis.build.slug_dir = '/opt/deis/build/slugs'
+default.deis.docker.version = '0.7.0'
 
 # database
 default.deis.database.name = 'deis'
@@ -39,6 +23,25 @@ default.deis.controller.worker_port = 8000
 default.deis.controller.http_port = 80
 default.deis.controller.https_port = 443
 default.deis.controller.log_dir = '/opt/deis/controller/logs'
+
+# gitosis
+default.deis.gitosis.dir = '/opt/deis/gitosis'
+default.deis.gitosis.repository = 'git://github.com/opdemand/gitosis.git'
+default.deis.gitosis.revision = 'master'
+
+# build
+default.deis.build.dir = '/opt/deis/build'
+default.deis.build.slug_dir = '/opt/deis/build/slugs'
+default.deis.build.builder_dir = '/opt/deis/build/slugbuilder'
+default.deis.build.repository = 'https://github.com/flynn/slugbuilder'
+default.deis.build.revision = 'master'
+
+# runtime
+default.deis.runtime.dir = '/opt/deis/runtime'
+default.deis.runtime.runner_dir = '/opt/deis/runtime/slugrunner'
+default.deis.runtime.slug_dir = '/opt/deis/runtime/slugs'
+default.deis.runtime.repository = 'https://github.com/flynn/slugrunner'
+default.deis.runtime.revision = 'master'
 
 # rsyslog
 default['rsyslog']['log_dir'] = '/var/log/rsyslog'
