@@ -1,5 +1,10 @@
 include_recipe 'deis::docker'
 
+directory node.deis.build.dir do
+  user node.deis.username
+  group node.deis.group
+end
+
 # checkout the slugbuilder project
 git node.deis.build.builder_dir do
   user node.deis.username
