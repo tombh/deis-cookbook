@@ -21,7 +21,7 @@ script
 end script
 
 pre-start script
-  docker run -name="<%= @name %>" -v <%= @slug_dir %>:/app -p <%= @port %>:<%= @port %> -e PORT=<%= @port %><% @env.each_pair do |k,v| %> -e <%= k.upcase %>='<%= v %>'<% end %> <%= @image %> start <%= @c_type %>
+  docker run -d -name="<%= @name %>" -v <%= @slug_dir %>:/app -p <%= @port %>:<%= @port %> -e PORT=<%= @port %><% @env.each_pair do |k,v| %> -e <%= k.upcase %>='<%= v %>'<% end %> <%= @image %> start <%= @c_type %>
 end script
 
 pre-stop script
