@@ -21,12 +21,6 @@ git node.deis.runtime.runner_dir do
   action :sync
 end
 
-directory node.deis.build.slug_dir do
-  user node.deis.username
-  group node.deis.group
-  mode 0777 # nginx needs write access
-end
-
 bash 'create-slugrunner-image' do
   cwd node.deis.runtime.runner_dir
   code 'docker build -t deis/slugrunner .'

@@ -1,5 +1,6 @@
 include_recipe 'deis::docker'
 
+# create build root directory
 directory node.deis.build.dir do
   user node.deis.username
   group node.deis.group
@@ -21,12 +22,14 @@ directory node.deis.build.slug_dir do
   mode 0777 # nginx needs write access
 end
 
+# create docker image used to run heroku buildpacks
 bash 'create-slugbuilder-image' do
   cwd node.deis.build.builder_dir
   code 'docker build -t deis/slugbuilder .'
   not_if 'docker images | grep deis/slugbuilder'
 end
 
+# write out hook called by gitosis during `git push`
 template '/usr/local/bin/deis-slugbuilder-hook' do
   source 'slugbuilder-hook.erb'
   mode 0755
