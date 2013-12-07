@@ -15,7 +15,7 @@ normal exit 0 CONT
 
 script
   # try to remove the container, if it succeeds something went wrong in pre-start so exit non-zero
-  docker rm <%= @name %> && exit 1
+  docker rm <%= @name %> >/dev/null 2>&1 && exit 1 
   # attach to the container and stream output to syslog
   exec docker attach <%= @name %> 2>&1 | logger -p local0.info -t <%= @app_name %>[<%=@c_type%>.<%= @c_num %>]
 end script
@@ -25,6 +25,6 @@ pre-start script
 end script
 
 pre-stop script
-  docker stop <%= @name %>
-  docker rm <%= @name %>
+  docker stop <%= @name %> >/dev/null
+  docker rm <%= @name %> >/dev/null
 end script
