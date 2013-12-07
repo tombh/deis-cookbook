@@ -27,6 +27,13 @@ bash 'create-slugrunner-image' do
   not_if 'docker images | grep deis/slugrunner'
 end
 
+# TODO: add back when https://github.com/dotcloud/docker/issues/643 is fixed 
+#bash 'clear-docker-containers' do
+#  code 'docker rm `docker ps -a -q`'
+#  action :nothing
+#  subscribes :run, 'bash[create-slugrunner-image]', :immediately
+#end
+
 package 'curl'
 
 formations = data_bag('deis-formations')
@@ -127,16 +134,18 @@ Dir.glob("/etc/init/deis-*").each do |path|
   targets.push([s, f])
 end
 
-Thread.abort_on_exception = true
-ruby_block "stop-services-in-parallel" do
-  block do
-    threads = []
-    targets.each { |s, f|
-      threads << Thread.new { |t| 
-        s.run_action(:stop)
-        f.run_action(:delete)
+if ! targets.empty?
+  Thread.abort_on_exception = true
+  ruby_block "stop-services-in-parallel" do
+    block do
+      threads = []
+      targets.each { |s, f|
+        threads << Thread.new { |t| 
+          s.run_action(:stop)
+          f.run_action(:delete)
+        }
       }
-    }
-    threads.each { |t| t.join }
+      threads.each { |t| t.join }
+    end
   end
 end
