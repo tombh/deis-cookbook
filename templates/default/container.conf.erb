@@ -1,23 +1,30 @@
-pre-start script
+description "Docker service for <%= @name %>"
+author "Docker Chef Cookbook"
 
-end script
-
-start on (local-filesystems and net-device-up and runlevel [2345])
+start on filesystem and started docker
 stop on runlevel [!2345]
 
-respawn
-respawn limit 2 10   # stop if there are 2 respawns in 10 seconds
-
-setuid root
-setgid root
+# We don't want to TERM the `docker wait` process so we fake the signal 
+# we send to it. The pre-stop script issues the `docker stop` command
+# which causes the `docker attach` process to exit
+kill signal CONT
+ 
+# Due to a bug in upstart we need to set the modes we consider
+# successful exists https://bugs.launchpad.net/upstart/+bug/568288
+normal exit 0 CONT
 
 script
-  exec docker run -p <%= @port %>:<%= @port %> -rm=true -e PORT=<%= @port %> <% if not @slug_dir.nil? %>-v <%= @slug_dir %>/app:/app<% end %> <% @env.each_pair do |k,v| %> -e <%= k.upcase %>='<%= v %>'<% end %> <%= @image %> <% if ! @command.nil? %>/bin/sh -c 'export HOME=/app; cd /app && for profile in `find /app/.profile.d/*.sh -type f`; do . $profile; done && <%= @command %>'<% end %> 2>&1 | logger -p local0.info -t <%= @app_name %>[<%=@c_type%>.<%= @c_num %>]
+  # try to remove the container, if it succeeds something went wrong in pre-start so exit non-zero
+  docker rm <%= @name %> >/dev/null 2>&1 && exit 1 
+  # attach to the container and stream output to syslog
+  exec docker attach <%= @name %> 2>&1 | logger -p local0.info -t <%= @app_name %>[<%=@c_type%>.<%= @c_num %>]
 end script
 
-# hacky workaround for docker port race condition
-post-stop script
-  while [ "`netstat -an | grep LISTEN | egrep ':<%= @port %>'`" != "" ]; do
-    sleep 1
-  done
+pre-start script
+  docker run -d -name="<%= @name %>" -v <%= @slug_dir %>:/app -p <%= @port %>:<%= @port %> -e PORT=<%= @port %><% @env.each_pair do |k,v| %> -e <%= k.upcase %>='<%= v %>'<% end %> <%= @image %> start <%= @c_type %>
+end script
+
+pre-stop script
+  docker stop <%= @name %> >/dev/null
+  docker rm <%= @name %> >/dev/null
 end script

@@ -1,43 +1,38 @@
 include_recipe 'rsyslog::client'
 include_recipe 'deis::docker'
 
-username = node.deis.username
-group = node.deis.group
-home = node.deis.dir
-
 directory node.deis.runtime.dir do
-  user username
-  group group
+  user node.deis.username
+  group node.deis.group
   mode 0700
 end
 
-directory node.deis.runtime.slug_root do
-  user username
-  group group
+directory node.deis.runtime.slug_dir do
+  user node.deis.username
+  group node.deis.group
   mode 0700
 end
 
-build_dir = node.deis.build.dir
-
-git build_dir do
-  user username
-  group group
-  repository node.deis.build.repository
-  revision node.deis.build.revision
+git node.deis.runtime.runner_dir do
+  user node.deis.username
+  group node.deis.group
+  repository node.deis.runtime.repository
+  revision node.deis.runtime.revision
   action :sync
 end
 
-directory node.deis.build.slug_dir do
-  user username
-  group group
-  mode 0777 # nginx needs write access
+bash 'create-slugrunner-image' do
+  cwd node.deis.runtime.runner_dir
+  code 'docker build -t deis/slugrunner .'
+  not_if 'docker images | grep deis/slugrunner'
 end
 
-bash 'create-buildstep-image' do
-  cwd build_dir
-  code "make"
-  not_if "docker images | grep #{node.deis.build.image}"
-end
+# TODO: add back when https://github.com/dotcloud/docker/issues/643 is fixed 
+#bash 'clear-docker-containers' do
+#  code 'docker rm `docker ps -a -q`'
+#  action :nothing
+#  subscribes :run, 'bash[create-slugrunner-image]', :immediately
+#end
 
 package 'curl'
 
@@ -63,16 +58,6 @@ formations.each do |f|
     build = app['release']['build']
     config = app['release']['config']
     
-    image = app['release']['build']['image']
-    
-    # pull the image if it doesn't exist already
-    
-    bash "pull-image-#{app_id}" do
-      cwd node.deis.runtime.dir
-      code "docker pull #{image}"
-      not_if "docker images | grep #{image}"
-    end
-    
     # if build is specified, use special heroku-style runtime
     
     if build.has_key? 'url'
@@ -80,10 +65,9 @@ formations.each do |f|
       slug_url = build['url']
       
       # download the slug to a tempdir
-      slug_root = node.deis.runtime.slug_root
-      slug_dir = "#{slug_root}/#{app_id}-#{version}"
-      slug_filename = "app.tar.gz"
-      slug_path = "#{slug_dir}/#{slug_filename}"
+      slug_root = node.deis.runtime.slug_dir
+      slug_path = "#{slug_root}/#{app_id}-v#{version}.tar.gz"
+      slug_dir = "#{slug_root}/#{app_id}-v#{version}"
       
       bash "download-slug-#{app_id}-#{version}" do
         cwd slug_root
@@ -96,8 +80,6 @@ formations.each do |f|
           EOF
         not_if "test -f #{slug_path}"
       end
-    else
-      slug_dir = nil
     end
   
     # iterate over this application's process formation by
@@ -117,36 +99,53 @@ formations.each do |f|
         else
           command = nil # assume command baked into docker image
         end
-        service_name = "deis-#{app_id}.#{c_type}.#{c_num}"
+        name = "#{app_id}.#{c_type}.#{c_num}"
         # define the container
-        container service_name do
+        container name do
           app_name app_id
           c_type c_type
           c_num c_num
           env config
-          command command
           port port
-          image image
+          image 'deis/slugrunner'
           slug_dir slug_dir
         end
-        services.push(service_name)
+        services.push("deis-#{name}")
       end
     end
   end # formations['apps'].each
 end # formations.each
-
-# purge old container services
-
+# 
+# # purge old container services
+# 
+targets = []
 Dir.glob("/etc/init/deis-*").each do |path|
   svc = File.basename(path, '.conf')
   next if svc.start_with? 'deis-server'
   next if svc.start_with? 'deis-worker'
   next if services.include? svc
-  service svc do
+  s = service svc do
     provider Chef::Provider::Service::Upstart
-    action [:stop, :disable]
+    action :nothing
   end
-  file path do
-    action :delete
+  f = file path do
+    action :nothing
+  end
+  targets.push([s, f])
+end
+
+if ! targets.empty?
+  Thread.abort_on_exception = true
+  ruby_block "stop-services-in-parallel" do
+    block do
+      threads = []
+      targets.each { |s, f|
+        threads << Thread.new { |t| 
+          s.run_action(:stop)
+          f.run_action(:delete)
+        }
+      }
+      threads.each { |t| t.join }
+    end
   end
 end
