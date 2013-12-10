@@ -10,6 +10,14 @@ package 'python-dev'
 package 'rabbitmq-server' # for celery
 package 'libpq-dev' # for psycopg2
 
+# if the devmode attribute is true, only checkout the repo once
+# otherwise synchronize it to latest revision to facilitate upgrades
+if node.deis.devmode == true
+  git_action = :checkout
+else
+  git_action = :sync
+end
+
 # synchronize the gitosis repository
 
 git controller_dir do
@@ -17,7 +25,7 @@ git controller_dir do
   group group
   repository node.deis.controller.repository
   revision node.deis.controller.revision
-  action :checkout
+  action git_action
 end
 
 directory controller_dir do
