@@ -21,8 +21,7 @@ env DJANGO_WORKERS=<%= @workers %>
 pre-start script
 cd $DJANGO_HOME
 . venv/bin/activate
-./manage.py syncdb --noinput
-./manage.py migrate --noinput
+./manage.py syncdb --migrate --noinput
 end script
 
 script

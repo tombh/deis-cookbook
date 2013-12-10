@@ -3,6 +3,7 @@ default.deis.dir = '/opt/deis'
 default.deis.username = 'deis'
 default.deis.group = 'deis'
 default.deis.log_dir = '/var/log/deis'
+default.deis.devmode = false # set to true to disable repo syncing
 
 # docker
 default.deis.docker.key_url = 'https://get.docker.io/gpg'
