@@ -39,3 +39,35 @@ template '/usr/local/bin/deis-slugbuilder-hook' do
   })
 end
 
+# custom buildpacks repositories and revisions
+buildpacks = {
+ 'heroku-buildpack-java' => ['https://github.com/heroku/heroku-buildpack-java.git', 'master'],
+ 'heroku-buildpack-ruby' => ['https://github.com/heroku/heroku-buildpack-ruby.git', 'master'],
+ 'heroku-buildpack-python' => ['https://github.com/heroku/heroku-buildpack-python.git', 'master'],
+ 'heroku-buildpack-nodejs' => ['https://github.com/gabrtv/heroku-buildpack-nodejs', 'master'],
+ 'heroku-buildpack-play' => ['https://github.com/heroku/heroku-buildpack-play.git', 'master'],
+ 'heroku-buildpack-php' => ['https://github.com/CHH/heroku-buildpack-php.git', 'master'],
+ 'heroku-buildpack-clojure' => ['https://github.com/heroku/heroku-buildpack-clojure.git', 'master'],
+ 'heroku-buildpack-go' => ['https://github.com/kr/heroku-buildpack-go.git', 'master'],
+ 'heroku-buildpack-scala' => ['https://github.com/heroku/heroku-buildpack-scala', 'master'],
+ 'heroku-buildpack-dart' => ['https://github.com/igrigorik/heroku-buildpack-dart.git', 'master'],
+ 'heroku-buildpack-perl' => ['https://github.com/miyagawa/heroku-buildpack-perl.git', 'carton'],
+}
+
+directory node.deis.build.pack_dir do
+  user node.deis.username
+  group node.deis.group
+  mode 0755
+end
+
+# synchronize buildpacks to use during slugbuilder execution
+buildpacks.each_pair { |path, repo|
+  url, rev = repo
+  git "#{node.deis.build.pack_dir}/#{path}" do
+    user node.deis.username
+    group node.deis.group
+    repository url
+    revision rev
+    action :sync
+  end
+}

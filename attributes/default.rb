@@ -33,6 +33,7 @@ default.deis.gitosis.revision = 'master'
 # build
 default.deis.build.dir = '/opt/deis/build'
 default.deis.build.slug_dir = '/opt/deis/build/slugs'
+default.deis.build.pack_dir = '/opt/deis/build/packs'
 default.deis.build.builder_dir = '/opt/deis/build/slugbuilder'
 default.deis.build.repository = 'https://github.com/flynn/slugbuilder'
 default.deis.build.revision = 'master'
