@@ -74,6 +74,7 @@ if __name__ == '__main__':
     # build/compile
     cmd = "git archive master | docker run -i -a stdin" \
           " -v {cache_dir}:/tmp/cache:rw " \
+          " -v /opt/deis/build/packs:/tmp/buildpacks:rw " \
           " deis/slugbuilder"
     cmd = cmd.format(**locals())
     p = subprocess.Popen(cmd, cwd=args.src, shell=True, stdout=subprocess.PIPE)
