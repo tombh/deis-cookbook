@@ -18,6 +18,15 @@ else
   git_action = :sync
 end
 
+# Global shell environment variables
+template '/etc/profile.d/controller_env.sh' do
+  source 'controller_env.sh.erb'
+  variables({
+    :slug_dir => node.deis.build.slug_dir,
+    :controller_dir => node.deis.controller.dir,
+  })
+end
+
 # synchronize the gitosis repository
 
 git controller_dir do

@@ -178,6 +178,7 @@ template "#{gitosis_admin_checkout}/gitosis.conf" do
   variables({
     :admins => ['gitosis-admin'],
     :apps => perms['apps'],
+    :slugbuilder_path => node.deis.controller.dir + '/bin/slugbuilder-hook.py'
   })
   notifies :run, 'bash[git-commit-gitosis-admin]'
 end
