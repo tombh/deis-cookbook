@@ -19,12 +19,21 @@ else
 end
 
 # Global shell environment variables
-template '/etc/profile.d/controller_env.sh' do
-  source 'controller_env.sh.erb'
-  variables({
-    :slug_dir => node.deis.build.slug_dir,
-    :controller_dir => node.deis.controller.dir,
-  })
+ruby_block "Update vars in /etc/environment" do
+  block do
+    vars = {
+      'SLUG_DIR' => node.deis.build.slug_dir,
+      'CONTROLLER_DIR' => node.deis.controller.dir
+    }
+    rc = Chef::Util::FileEdit.new("/etc/environment")
+    vars.each do |key, value|
+      regex = /^#{key}=/
+      line = "#{key}=#{value}"
+      rc.search_file_replace_line(regex, line)
+      rc.insert_line_if_no_match(regex, line)
+    end
+    rc.write_file
+  end
 end
 
 # synchronize the gitosis repository
