@@ -31,8 +31,8 @@ ruby_block "Update vars in /etc/environment" do
       line = "#{key}=#{value}"
       rc.search_file_replace_line(regex, line)
       rc.insert_line_if_no_match(regex, line)
+      rc.write_file
     end
-    rc.write_file
   end
 end
 
