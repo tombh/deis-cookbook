@@ -1,5 +1,5 @@
 [gitosis]
-build_hook = /usr/local/bin/deis-slugbuilder-hook
+build_hook = <%= @slugbuilder_path %>
 
 [group gitosis-admin]
 members = <% @admins.each do |key_name| %><%= key_name %> <% end %>
