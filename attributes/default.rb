@@ -8,7 +8,7 @@ default.deis.devmode = false # set to true to disable repo syncing
 # docker
 default.deis.docker.key_url = 'https://get.docker.io/gpg'
 default.deis.docker.deb_url = 'https://get.docker.io/ubuntu'
-default.deis.docker.version = '0.7.1'
+default.deis.docker.version = '0.7.3'
 
 # database
 default.deis.database.name = 'deis'
