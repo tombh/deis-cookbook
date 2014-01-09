@@ -64,8 +64,7 @@ The proxy recipe will iterate over the `deis-formations` databag and configure N
 
 The destination for rsyslog clients is determined by a Chef search for recipe[deis::controller], and using the `ipaddress` attribute.
 
-# License and Authors
-Author:: Gabriel Monroy <gabriel@opdemand.com>
+# License
 
 Copyright:: 2013, OpDemand LLC
 
