@@ -6,8 +6,8 @@ require 'etcd'
 ruby_block 'set-server-config' do
   block do
     client = Etcd.client(host: node.deis.public_ip, port: node.deis.etcd.port)
-    client.set('/deis/controller/secret-key', 'CHANGEME_sapm$s%upvsw5l_zuy_&29rkywd^78ff(qilmw1#g')
-    client.set('/deis/controller/builder-key', 'CHANGEME_sapm$s%upvsw5l_zuy_&29rkywd^78ff(qilmw1#g')
+    client.set('/deis/controller/secret-key', 'CHANGEME_XbHYct6MdqQAAN0hXY1JOqgvdsMixFquoAIPSmzFTz68LZn3pSB1ozNfIDq')
+    client.set('/deis/controller/builder-key', 'CHANGEME_XbHYct6MdqQAAN0hXY1JOqgvdsMixFquoAIPSmzFTz68LZn3pSB1ozNfIDq')
     client.set('/deis/controller/cm-module', 'cm.chef')
   end
   not_if {
@@ -65,9 +65,3 @@ docker_container node.deis.server.container do
   port "#{node.deis.server.port}:#{node.deis.server.port}"
   cmd_timeout 600 # image takes a while to download
 end
-
-# service node.deis.server.container do
-  # provider Chef::Provider::Service::Upstart
-  # action [:start, :enable]
-  # notifies :create, "ruby_block[publish-controller]", :immediately
-# end
