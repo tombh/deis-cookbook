@@ -38,6 +38,16 @@ ruby_block 'get-database-config' do
   end
 end
 
+# TODO: refactor into library
+ruby_block 'publish-database' do
+  block do
+    client = Etcd.client(host: node.deis.public_ip, port: node.deis.etcd.port)
+    client.set('/deis/database/host', node.deis.public_ip)
+    client.set('/deis/database/port', node.deis.database.port)
+  end
+  action :nothing
+end
+
 # start the container and create an upstart service
 
 docker_container node.deis.database.container do
@@ -46,8 +56,5 @@ docker_container node.deis.database.container do
   env env
   image node.deis.database.image
   port "#{node.deis.database.port}:#{node.deis.database.port}"
-  cookbook 'deis'
-  init_template 'deis-database.conf.erb'
+  notifies :create, "ruby_block[publish-database]", :immediately
 end
-
-# wait for the service to become active

@@ -46,7 +46,7 @@ ruby_block 'get-server-config' do
 end
 
 # TODO: refactor into library
-ruby_block 'publish-controller' do
+ruby_block 'publish-server' do
   block do
     client = Etcd.client(host: node.deis.public_ip, port: node.deis.etcd.port)
     client.set('/deis/controller/host', node.deis.public_ip)
@@ -64,4 +64,5 @@ docker_container node.deis.server.container do
   image node.deis.server.image
   port "#{node.deis.server.port}:#{node.deis.server.port}"
   cmd_timeout 600 # image takes a while to download
+  notifies :create, "ruby_block[publish-server]", :immediately
 end

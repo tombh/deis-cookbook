@@ -37,13 +37,15 @@ default.deis.server.port = 8000
 default.deis.worker.image = 'deis/controller'
 default.deis.worker.container = 'deis-worker'
 
-# builder
-default.deis.builder.image = 'deis/builder'
-default.deis.builder.container = 'deis-builder'
-
 # registry
 default.deis.registry.image = 'deis/registry'
 default.deis.registry.container = 'deis-registry'
+default.deis.registry.port = 5000
+
+# builder
+default.deis.builder.image = 'deis/builder'
+default.deis.builder.container = 'deis-builder'
+default.deis.builder.port = 2222
 
 # # server/api
 # default.deis.controller.dir = '/opt/deis/controller'
