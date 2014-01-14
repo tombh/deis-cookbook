@@ -1,9 +1,28 @@
-# configure the container unless its keyspace already exists
+ 
+# build the image (versus pulling it)
+
+# directory node.deis.worker.checkout do
+  # recursive true
+  # action :create  
+# end
+# 
+# git node.deis.worker.checkout do
+  # repository node.deis.worker.repository
+  # revision node.deis.worker.revision
+  # action :checkout
+# end
+# 
+# docker_image node.deis.worker.image do
+  # source node.deis.worker.checkout
+  # action :nothing
+  # subscribes :build, "git[#{node.deis.worker.checkout}]", :immediately
+  # cmd_timeout 600
+# end
 
 require 'etcd'
 
 # TODO: refactor into library
-ruby_block 'set-server-config' do
+ruby_block 'set-worker-config' do
   block do
     client = Etcd.client(host: node.deis.public_ip, port: node.deis.etcd.port)
     client.set('/deis/controller/secret-key', 'CHANGEME_sapm$s%upvsw5l_zuy_&29rkywd^78ff(qilmw1#g')
@@ -23,7 +42,7 @@ end
 
 # TODO: refactor into library
 env = []
-ruby_block 'get-server-config' do
+ruby_block 'get-worker-config' do
   block do
     client = Etcd.client(host: node.deis.public_ip, port: node.deis.etcd.port)
     env.push("DATABASE_HOST='"+client.get('/deis/database/host').value+"'")
@@ -45,29 +64,14 @@ ruby_block 'get-server-config' do
   end
 end
 
-# TODO: refactor into library
-ruby_block 'publish-controller' do
-  block do
-    client = Etcd.client(host: node.deis.public_ip, port: node.deis.etcd.port)
-    client.set('/deis/controller/host', node.deis.public_ip)
-    client.set('/deis/controller/port', node.deis.server.port)
-  end
-  action :nothing
-end
 
 # start the container and create an upstart service
 
-docker_container node.deis.server.container do
-  container_name node.deis.server.container
+docker_container node.deis.worker.container do
+  container_name node.deis.worker.container
   detach true
   env env
-  image node.deis.server.image
-  port "#{node.deis.server.port}:#{node.deis.server.port}"
+  image node.deis.worker.image
+  command 'celery worker --app=deis --loglevel=INFO'
   cmd_timeout 600 # image takes a while to download
 end
-
-# service node.deis.server.container do
-  # provider Chef::Provider::Service::Upstart
-  # action [:start, :enable]
-  # notifies :create, "ruby_block[publish-controller]", :immediately
-# end
