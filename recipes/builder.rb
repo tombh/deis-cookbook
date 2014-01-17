@@ -34,7 +34,9 @@ docker_container node.deis.builder.container do
   env env
   image node.deis.builder.image
   port "#{node.deis.builder.port}:22"
+  cmd_timeout 600 # image takes a while to download
   privileged true
+  #lxc_conf 'aa_profile=unconfined'
   notifies :create, "ruby_block[publish-builder]", :immediately
 end
 

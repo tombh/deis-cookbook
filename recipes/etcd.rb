@@ -23,3 +23,26 @@ bash 'install-etcdctl' do
     EOH
   creates '/usr/local/bin/etcdctl'
 end
+
+# publish chef configuration to etcd
+
+require 'etcd'
+ruby_block 'publish-chef-config' do
+  block do
+    client = Etcd.client(host: node.deis.public_ip, port: node.deis.etcd.port)
+    client.set('/deis/chef/url', "#{Chef::Config[:chef_server_url]}")
+    client.set('/deis/chef/clientName', "#{Chef::Config[:node_name]}")
+    client.set('/deis/chef/clientKey', "#{Base64.strict_encode64(File.read(Chef::Config[:client_key]))}")
+    client.set('/deis/chef/validationName', "#{Chef::Config[:validation_client_name]}")
+    client.set('/deis/chef/validationKey', "#{Base64.strict_encode64(File.read(Chef::Config[:validation_key]))}")
+  end
+  not_if {
+    client = Etcd.client(host: node.deis.public_ip, port: node.deis.etcd.port)
+    begin
+      client.get('/deis/chef')
+      true
+    rescue
+      false
+    end
+  }
+end

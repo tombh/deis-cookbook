@@ -29,12 +29,12 @@ default.deis.cache.container = 'deis-cache'
 default.deis.cache.port = 6379
 
 # server
-default.deis.server.image = 'deis/controller'
+default.deis.server.image = 'deis/server'
 default.deis.server.container = 'deis-server'
 default.deis.server.port = 8000
 
 # worker
-default.deis.worker.image = 'deis/controller'
+default.deis.worker.image = 'deis/worker'
 default.deis.worker.container = 'deis-worker'
 
 # registry
