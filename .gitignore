@@ -9,3 +9,5 @@
 
 *.sublime-project
 *.sublime-workspace
+
+metadata.json
