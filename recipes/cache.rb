@@ -10,3 +10,10 @@ docker_container node.deis.cache.container do
   image node.deis.cache.image
   port "#{node.deis.cache.port}:#{node.deis.cache.port}"
 end
+
+ruby_block 'wait-for-cache' do
+  block do
+    EtcdHelper.wait_for_key(node.deis.public_ip, node.deis.etcd.port,
+                            '/deis/cache/host')
+  end
+end
