@@ -5,8 +5,10 @@
 # Copyright 2013, OpDemand LLC
 #
 
-include_recipe 'docker'
+# bind docker to all interfaces for external connectivity
+node.default['docker']['bind_uri'] = 'tcp://0.0.0.0:4243'
 
+include_recipe 'docker'
 
 # always install these packages
 
