@@ -1,5 +1,9 @@
 
-# start the container and create an upstart service
+docker_image node.deis.etcd.image do
+  source node.deis.etcd.source
+  only_if "test -e #{node.deis.etcd.source}/Dockerfile"
+  action :build
+end
 
 docker_container node.deis.etcd.container do
   container_name node.deis.etcd.container
@@ -9,12 +13,11 @@ docker_container node.deis.etcd.container do
        "ETCD_PEER_PORT=#{node.deis.etcd.peer_port}",
        "ETCD_NODE_NAME=#{node.hostname}"]
   image node.deis.etcd.image
+  init_type false
   port ["#{node.deis.etcd.port}:#{node.deis.etcd.port}", 
         "#{node.deis.etcd.peer_port}:#{node.deis.etcd.peer_port}"]
 end
  
-# install etcdctl on the host
-
 bash 'install-etcdctl' do
   cwd '/tmp'
   code <<-EOH
@@ -27,17 +30,12 @@ bash 'install-etcdctl' do
   creates '/usr/local/bin/etcdctl'
 end
 
-# wait for etcd to be listening
-
 ruby_block 'wait-for-etcd' do
   block do
     Connect.wait_tcp(node.deis.public_ip, node.deis.etcd.port, seconds=5)
   end
 end
 
-# publish chef configuration to etcd
-
-# TODO: refactor into library
 require 'etcd'
 ruby_block 'publish-chef-config' do
   block do
