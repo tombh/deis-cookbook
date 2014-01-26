@@ -39,6 +39,7 @@ package 'curl'
 formations = data_bag('deis-formations')
 
 services = []
+active_slug_paths = []
 formations.each do |f|
   
   formation = data_bag_item('deis-formations', f)
@@ -77,9 +78,14 @@ formations.each do |f|
           cd #{slug_dir}
           curl -s #{slug_url} > #{slug_path}
           tar xfz #{slug_path}
+          rm #{slug_path}
           EOF
         not_if "test -f #{slug_path}"
       end
+
+      # will prevent deleted these in the SLUG_DIR step
+      active_slug_paths.push("#{app_id}-v#{version}")
+
     end
   
     # iterate over this application's process formation by
@@ -115,6 +121,24 @@ formations.each do |f|
     end
   end # formations['apps'].each
 end # formations.each
+
+
+# remove old slug dirs
+slug_root = node.deis.runtime.slug_dir
+Dir.entries(slug_root).each do |f|
+  next if f == '.'
+  next if f == '..'
+
+  slug_dir = "#{slug_root}/#{f}"
+
+  directory slug_dir do
+    action :delete
+    recursive true
+    not_if { active_slug_paths.include? f }
+  end
+end
+
+
 # 
 # # purge old container services
 # 
