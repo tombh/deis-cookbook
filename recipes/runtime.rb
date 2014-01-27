@@ -80,7 +80,7 @@ formations.each do |f|
           tar xfz #{slug_path}
           rm #{slug_path}
           EOF
-        not_if "test -f #{slug_dir}"
+        not_if "test -d #{slug_dir}"
       end
 
       # will prevent deleted these in the SLUG_DIR step
