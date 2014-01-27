@@ -1,10 +1,4 @@
 
-docker_image node.deis.etcd.image do
-  source node.deis.etcd.source
-  only_if "test -e #{node.deis.etcd.source}/Dockerfile"
-  action :build
-end
-
 docker_container node.deis.etcd.container do
   container_name node.deis.etcd.container
   detach true

@@ -1,31 +1,30 @@
 include_recipe 'rsyslog::client'
-include_recipe 'deis::docker'
 
-directory node.deis.runtime.dir do
-  user node.deis.username
-  group node.deis.group
-  mode 0700
-end
-
-directory node.deis.runtime.slug_dir do
-  user node.deis.username
-  group node.deis.group
-  mode 0700
-end
-
-git node.deis.runtime.runner_dir do
-  user node.deis.username
-  group node.deis.group
-  repository node.deis.runtime.repository
-  revision node.deis.runtime.revision
-  action :sync
-end
-
-bash 'create-slugrunner-image' do
-  cwd node.deis.runtime.runner_dir
-  code 'docker build -t deis/slugrunner .'
-  not_if 'docker images | grep deis/slugrunner'
-end
+# directory node.deis.runtime.dir do
+  # user node.deis.username
+  # group node.deis.group
+  # mode 0700
+# end
+# 
+# directory node.deis.runtime.slug_dir do
+  # user node.deis.username
+  # group node.deis.group
+  # mode 0700
+# end
+# 
+# git node.deis.runtime.runner_dir do
+  # user node.deis.username
+  # group node.deis.group
+  # repository node.deis.runtime.repository
+  # revision node.deis.runtime.revision
+  # action :sync
+# end
+# 
+# bash 'create-slugrunner-image' do
+  # cwd node.deis.runtime.runner_dir
+  # code 'docker build -t deis/slugrunner .'
+  # not_if 'docker images | grep deis/slugrunner'
+# end
 
 # TODO: add back when https://github.com/dotcloud/docker/issues/643 is fixed 
 #bash 'clear-docker-containers' do

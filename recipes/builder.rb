@@ -1,4 +1,26 @@
 
+directory node.deis.builder.packs do
+  user node.deis.username
+  group node.deis.group
+  mode 0755
+end
+
+docker_container node.deis.builder.container do
+  container_name node.deis.builder.container
+  detach true
+  privileged true
+  env ["ETCD=#{node.deis.public_ip}:#{node.deis.etcd.port}",
+       "HOST=#{node.deis.public_ip}",
+       "PORT=22"]
+  image node.deis.builder.image
+  init_type false
+  port "#{node.deis.builder.port}:22"
+  # bind mount /app if we're running out of vagrant
+  volume ["#{node.deis.builder.packs}:/tmp/buildpacks", 
+          File.exist?('/vagrant/images/builder') ? "/vagrant/images/builder:/app" : nil ]
+  cmd_timeout 600 # image takes a while to download
+end
+
 # custom buildpacks repositories and revisions
 buildpacks = {
  'heroku-buildpack-java' => ['https://github.com/heroku/heroku-buildpack-java.git', 'master'],
@@ -14,12 +36,6 @@ buildpacks = {
  'heroku-buildpack-perl' => ['https://github.com/miyagawa/heroku-buildpack-perl.git', 'carton'],
 }
 
-directory node.deis.builder.packs do
-  user node.deis.username
-  group node.deis.group
-  mode 0755
-end
-
 # synchronize buildpacks to use during slugbuilder execution
 buildpacks.each_pair { |path, repo|
   url, rev = repo
@@ -31,28 +47,6 @@ buildpacks.each_pair { |path, repo|
     action :sync
   end
 }
-
-docker_image node.deis.builder.image do
-  source node.deis.builder.source
-  only_if "test -e #{node.deis.builder.source}/Dockerfile"
-  action :build
-end
-
-docker_container node.deis.builder.container do
-  container_name node.deis.builder.container
-  detach true
-  privileged true
-  env ["ETCD=#{node.deis.public_ip}:#{node.deis.etcd.port}",
-       "HOST=#{node.deis.public_ip}",
-       "PORT=22"]
-  image node.deis.builder.image
-  init_type false  
-  port "#{node.deis.builder.port}:22"
-  # bind mount /app if we're running out of vagrant
-  volume ["#{node.deis.builder.packs}:/tmp/buildpacks", 
-          File.exist?('/vagrant/images/builder') ? "/vagrant/images/builder:/app" : nil ]
-  cmd_timeout 600 # image takes a while to download
-end
 
 ruby_block 'wait-for-builder' do
   block do

@@ -1,14 +1,7 @@
 
-docker_image node.deis.registry.image do
-  source node.deis.registry.source
-  only_if "test -e #{node.deis.registry.source}/Dockerfile"
-  action :build
-end
-
 docker_container node.deis.registry.container do
   container_name node.deis.registry.container
   detach true
-  privileged true
   env ["ETCD=#{node.deis.public_ip}:#{node.deis.etcd.port}",
        "HOST=#{node.deis.public_ip}",
        "PORT=#{node.deis.registry.port}"]

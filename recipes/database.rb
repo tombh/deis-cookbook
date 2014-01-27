@@ -1,10 +1,4 @@
 
-docker_image node.deis.database.image do
-  source node.deis.database.source
-  only_if "test -e #{node.deis.database.source}/Dockerfile"
-  action :build
-end
-
 docker_container node.deis.database.container do
   container_name node.deis.database.container
   detach true

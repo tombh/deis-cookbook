@@ -1,11 +1,4 @@
 
-docker_image node.deis.server.image do
-  source node.deis.server.source
-  only_if "test -e #{node.deis.server.source}/Dockerfile"
-  action :build
-  cmd_timeout 600 # image takes a while to build
-end
-
 docker_container node.deis.server.container do
   container_name node.deis.server.container
   detach true
