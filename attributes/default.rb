@@ -1,5 +1,5 @@
 # base
-default.deis.dir = '/opt/deis'
+default.deis.dir = '/var/lib/deis'
 default.deis.username = 'deis'
 default.deis.group = 'deis'
 default.deis.log_dir = '/var/log/deis'
@@ -53,6 +53,7 @@ default.deis.builder.image = 'deis/builder'
 default.deis.builder.source = '/vagrant/images/builder'
 default.deis.builder.container = 'deis-builder'
 default.deis.builder.port = 2222
+default.deis.builder.packs = '/var/lib/deis/buildpacks'
 
 # # server/api
 # default.deis.controller.dir = '/opt/deis/controller'
