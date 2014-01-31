@@ -9,10 +9,10 @@ docker_container node.deis.server.container do
   init_type false
   port "#{node.deis.server.port}:#{node.deis.server.port}"
   # bind mount /app if we're running out of vagrant
-  volume [ File.exist?('/vagrant/manage.py') ? "/vagrant:/app/deis" : nil,
+  volume [ "/home/vagrant:/home/vagrant", File.exist?('/vagrant/manage.py') ? "/vagrant:/app/deis" : nil,
            File.exist?('/vagrant/images/server') ? "/vagrant/images/server/bin:/app/bin" : nil,
            File.exist?('/vagrant/images/server') ? "/vagrant/images/server/conf.d:/app/conf.d" : nil,
-           File.exist?('/vagrant/images/server') ? "/vagrant/images/server/templates:/app/templates" : nil]
+           File.exist?('/vagrant/images/server') ? "/vagrant/images/server/templates:/app/templates" : nil,]
   cmd_timeout 600 # image takes a while to download
 end
 
