@@ -16,7 +16,7 @@ docker_container node.deis.builder.container do
   init_type false
   port "#{node.deis.builder.port}:22"
   # bind mount /app if we're running out of vagrant
-  volume ["#{node.deis.builder.packs}:/tmp/buildpacks", 
+  volume ["#{node.deis.builder.packs}:/buildpacks",
           File.exist?('/vagrant/images/builder') ? "/vagrant/images/builder:/app" : nil ]
   cmd_timeout 600 # image takes a while to download
 end
