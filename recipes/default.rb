@@ -19,9 +19,10 @@ package 'make'
 # set public ip
 
 if node.deis.public_ip == nil
-    log "Public IP attribute not provided, falling back to 127.0.0.1..." do
-    level :warn
-  end
+    log "ip-discovery-warning" do
+      message "Public IP attribute not provided, falling back to 127.0.0.1..."
+      level :warn
+    end
   node.default.deis.public_ip = '127.0.0.1'
 end
 
