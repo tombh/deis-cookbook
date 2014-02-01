@@ -58,10 +58,8 @@ sudo username do
   commands ['/usr/bin/chef-client']
 end
 
-# create a log directory writeable by the deis user
-
 directory node.deis.log_dir do
-  user username
-  group group
-  mode 0755
+  user 'syslog'
+  group 'syslog'
+  mode 0775
 end
