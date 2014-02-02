@@ -5,6 +5,10 @@ default.deis.group = 'deis'
 default.deis.log_dir = '/var/log/deis'
 default.deis.public_ip = nil # public ip must be defined or discovered
 
+# development
+default.deis.dev.mode = false
+default.deis.dev.source = '/vagrant'
+
 # rsyslog
 default.rsyslog.server_search = 'run_list:recipe\[deis\:\:controller\]'
 
@@ -50,7 +54,8 @@ default.deis.builder.image = 'deis/builder'
 default.deis.builder.source = '/vagrant/images/builder'
 default.deis.builder.container = 'deis-builder'
 default.deis.builder.port = 2222
-default.deis.builder.packs = '/var/lib/deis/buildpacks'
+# change nil to target diractory to sync buildpacks from github
+default.deis.builder.packs = nil #'/var/lib/deis/buildpacks'
 
 # logger
 default.deis.logger.image = 'deis/rsyslog'

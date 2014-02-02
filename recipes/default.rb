@@ -5,6 +5,10 @@
 # Copyright 2013, OpDemand LLC
 #
 
+# install etcd bindings
+
+chef_gem 'etcd'
+
 # bind docker to all interfaces for external connectivity
 node.default['docker']['bind_uri'] = 'tcp://0.0.0.0:4243'
 
@@ -20,15 +24,11 @@ package 'make'
 
 if node.deis.public_ip == nil
     log "ip-discovery-warning" do
-      message "Public IP attribute not provided, falling back to 127.0.0.1..."
+      message "\nPublic IP attribute not provided, using Ohai: #{node.ipaddress}"
       level :warn
     end
-  node.default.deis.public_ip = '127.0.0.1'
+    node.default.deis.public_ip = node.ipaddress
 end
-
-# install etcd bindings
-
-chef_gem 'etcd'
 
 home_dir = node.deis.dir
 username = node.deis.username

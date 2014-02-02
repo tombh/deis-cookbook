@@ -1,4 +1,6 @@
 
+docker_image node.deis.cache.image
+
 docker_container node.deis.cache.container do
   container_name node.deis.cache.container
   detach true
@@ -7,8 +9,7 @@ docker_container node.deis.cache.container do
        "PORT=#{node.deis.cache.port}"]
   image node.deis.cache.image
   init_type false
-  # bind mount /app if we're running out of vagrant
-  volume File.exist?('/vagrant/images/redis') ? "/vagrant/images/redis:/app" : nil  
+  volume VolumeHelper.cache(node)
   port "#{node.deis.cache.port}:#{node.deis.cache.port}"
 end
 

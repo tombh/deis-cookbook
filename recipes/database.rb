@@ -1,4 +1,6 @@
 
+docker_image node.deis.database.image
+
 docker_container node.deis.database.container do
   container_name node.deis.database.container
   detach true
@@ -8,8 +10,7 @@ docker_container node.deis.database.container do
   image node.deis.database.image
   init_type false
   port "#{node.deis.database.port}:#{node.deis.database.port}"
-  # bind mount /app if we're running out of vagrant
-  volume File.exist?('/vagrant/images/postgres') ? "/vagrant/images/postgres:/app" : nil  
+  volume VolumeHelper.database(node)
 end
 
 ruby_block 'wait-for-database' do

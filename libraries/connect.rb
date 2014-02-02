@@ -4,7 +4,7 @@ require 'socket'
 
 class Chef::Recipe::Connect
 
-  def self.wait_tcp(ip, port, seconds=5)
+  def self.wait_tcp(ip, port, seconds=30)
     begin
       Timeout::timeout(seconds) do
         while true do

@@ -1,4 +1,6 @@
 
+docker_image node.deis.logger.image
+
 docker_container node.deis.logger.container do
   container_name node.deis.logger.container
   detach true
@@ -7,9 +9,7 @@ docker_container node.deis.logger.container do
        "PORT=#{node.deis.logger.port}"]
   image node.deis.logger.image
   init_type false
-  # bind mount /app if we're running out of vagrant
-  volume [ "#{node.deis.log_dir}:/var/log/deis", # mount host logs
-           File.exist?('/vagrant/images/rsyslog') ? "/vagrant/images/rsyslog:/app" : nil ]  
+  volume VolumeHelper.logger(node)
   port "#{node.deis.logger.port}:#{node.deis.logger.port}"
 end
 

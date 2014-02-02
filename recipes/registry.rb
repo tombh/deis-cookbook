@@ -1,4 +1,6 @@
 
+docker_image node.deis.registry.image
+
 docker_container node.deis.registry.container do
   container_name node.deis.registry.container
   detach true
@@ -8,8 +10,7 @@ docker_container node.deis.registry.container do
   image node.deis.registry.image
   init_type false  
   port "#{node.deis.registry.port}:#{node.deis.registry.port}"
-  # bind mount /app if we're running out of vagrant
-  volume File.exist?('/vagrant/images/registry') ? "/vagrant/images/registry:/app" : nil
+  volume VolumeHelper.registry(node)
   cmd_timeout 600 # image takes a while to download
 end
 
