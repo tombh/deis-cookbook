@@ -65,9 +65,9 @@ class Chef::Recipe::VolumeHelper
     if node.deis.dev.mode == true
       mounts.concat [
         "#{node.deis.dev.source}:/app/deis",
-        "#{File.join(node.deis.dev.source, 'images/server/bin')}:/app/bin",
-        "#{File.join(node.deis.dev.source, 'images/server/conf.d')}:/app/conf.d",
-        "#{File.join(node.deis.dev.source, 'images/server/templates')}:/app/templates" ]
+        "#{File.join(node.deis.dev.source, 'images/worker/bin')}:/app/bin",
+        "#{File.join(node.deis.dev.source, 'images/worker/conf.d')}:/app/conf.d",
+        "#{File.join(node.deis.dev.source, 'images/worker/templates')}:/app/templates" ]
       if File.exist?('/home/vagrant')
         mounts << '/home/vagrant:/home/vagrant'
       end        
