@@ -1,5 +1,7 @@
 
-docker_image node.deis.registry.image
+docker_image node.deis.registry.image do
+  action :pull
+end
 
 docker_container node.deis.registry.container do
   container_name node.deis.registry.container
@@ -17,6 +19,6 @@ end
 ruby_block 'wait-for-registry' do
   block do
     EtcdHelper.wait_for_key(node.deis.public_ip, node.deis.etcd.port,
-                            '/deis/registry/host')
+                            '/deis/registry/host', seconds=60)
   end
 end

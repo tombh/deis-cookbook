@@ -1,5 +1,7 @@
 
-docker_image node.deis.worker.image
+docker_image node.deis.worker.image do
+  action :pull
+end
 
 docker_container node.deis.worker.container do
   container_name node.deis.worker.container

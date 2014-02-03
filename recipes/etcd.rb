@@ -1,4 +1,8 @@
 
+docker_image node.deis.etcd.image do
+  action :pull
+end
+
 docker_container node.deis.etcd.container do
   container_name node.deis.etcd.container
   detach true

@@ -1,5 +1,7 @@
 
-docker_image node.deis.logger.image
+docker_image node.deis.logger.image do
+  action :pull
+end
 
 docker_container node.deis.logger.container do
   container_name node.deis.logger.container

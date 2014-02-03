@@ -1,5 +1,7 @@
 
-docker_image node.deis.cache.image
+docker_image node.deis.cache.image do
+  action :pull
+end
 
 docker_container node.deis.cache.container do
   container_name node.deis.cache.container

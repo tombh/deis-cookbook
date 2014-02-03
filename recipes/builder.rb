@@ -7,7 +7,9 @@ if node.deis.builder.packs != nil
   end
 end
 
-docker_image node.deis.builder.image
+docker_image node.deis.builder.image do
+  action :pull
+end
 
 docker_container node.deis.builder.container do
   container_name node.deis.builder.container
@@ -19,7 +21,6 @@ docker_container node.deis.builder.container do
   image node.deis.builder.image
   init_type false
   port "#{node.deis.builder.port}:22"
-  # bind mount /app if we're running out of vagrant
   volume VolumeHelper.builder(node)
   cmd_timeout 600 # image takes a while to download
 end
@@ -57,6 +58,6 @@ end
 ruby_block 'wait-for-builder' do
   block do
     EtcdHelper.wait_for_key(node.deis.public_ip, node.deis.etcd.port,
-                            '/deis/builder/host', sleep=120)
+                            '/deis/builder/host', sleep=300)
   end
 end

@@ -1,5 +1,7 @@
 
-docker_image node.deis.database.image
+docker_image node.deis.database.image do
+  action :pull
+end
 
 docker_container node.deis.database.container do
   container_name node.deis.database.container
