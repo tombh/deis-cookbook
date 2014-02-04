@@ -30,7 +30,7 @@ end
 
 ruby_block 'wait-for-etcd' do
   block do
-    Connect.wait_tcp(node.deis.public_ip, node.deis.etcd.port, seconds=5)
+    Connect.wait_tcp(node.deis.public_ip, node.deis.etcd.port, seconds=30)
   end
 end
 
