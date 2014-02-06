@@ -125,16 +125,18 @@ end # formations.each
 
 # remove old slug dirs
 slug_root = node.deis.runtime.slug_dir
-Dir.entries(slug_root).each do |f|
-  next if f == '.'
-  next if f == '..'
+if Dir.exists?(slug_root)
+  Dir.entries(slug_root).each do |f|
+    next if f == '.'
+    next if f == '..'
 
-  slug_dir = "#{slug_root}/#{f}"
+    slug_dir = "#{slug_root}/#{f}"
 
-  directory slug_dir do
-    action :delete
-    recursive true
-    not_if { active_slug_paths.include? f }
+    directory slug_dir do
+      action :delete
+      recursive true
+      not_if { active_slug_paths.include? f }
+    end
   end
 end
 
