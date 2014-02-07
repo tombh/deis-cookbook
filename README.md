@@ -37,7 +37,6 @@ The controller recipe will create a complete Deis controller on a single node in
  * RabbitMQ installation
  * Celery worker service
  * Nginx site for API
- * Gitosis server
  * Docker daemon
  * Docker-based build system
  * Nginx site for hosting build "slugs"
