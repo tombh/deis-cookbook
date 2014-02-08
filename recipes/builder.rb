@@ -9,6 +9,7 @@ end
 
 docker_image node.deis.builder.image do
   action :pull
+  cmd_timeout node.deis.builder.image_timeout
 end
 
 docker_container node.deis.builder.container do
@@ -22,12 +23,11 @@ docker_container node.deis.builder.container do
   init_type false
   port "#{node.deis.builder.port}:22"
   volume VolumeHelper.builder(node)
-  cmd_timeout 600 # image takes a while to download
 end
 
 # synchronize buildpacks to use during slugbuilder execution
 if node.deis.builder.packs != nil
-  
+
   buildpacks = {
    'heroku-buildpack-java' => ['https://github.com/heroku/heroku-buildpack-java.git', 'master'],
    'heroku-buildpack-ruby' => ['https://github.com/heroku/heroku-buildpack-ruby.git', 'master'],

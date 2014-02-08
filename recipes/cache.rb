@@ -1,6 +1,7 @@
 
 docker_image node.deis.cache.image do
   action :pull
+  cmd_timeout node.deis.cache.image_timeout
 end
 
 docker_container node.deis.cache.container do

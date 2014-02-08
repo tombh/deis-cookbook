@@ -1,6 +1,7 @@
 
 docker_image node.deis.etcd.image do
   action :pull
+  cmd_timeout node.deis.etcd.image_timeout
 end
 
 docker_container node.deis.etcd.container do
@@ -12,10 +13,10 @@ docker_container node.deis.etcd.container do
        "ETCD_NODE_NAME=#{node.hostname}"]
   image node.deis.etcd.image
   init_type false
-  port ["#{node.deis.etcd.port}:#{node.deis.etcd.port}", 
+  port ["#{node.deis.etcd.port}:#{node.deis.etcd.port}",
         "#{node.deis.etcd.peer_port}:#{node.deis.etcd.peer_port}"]
 end
- 
+
 bash 'install-etcdctl' do
   cwd '/tmp'
   code <<-EOH

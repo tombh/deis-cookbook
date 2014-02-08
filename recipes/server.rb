@@ -1,6 +1,7 @@
 
 docker_image node.deis.server.image do
   action :pull
+  cmd_timeout node.deis.server.image_timeout
 end
 
 docker_container node.deis.server.container do
@@ -13,7 +14,6 @@ docker_container node.deis.server.container do
   init_type false
   port "#{node.deis.server.port}:#{node.deis.server.port}"
   volume VolumeHelper.server(node)
-  cmd_timeout 600 # image takes a while to download
 end
 
 ruby_block 'wait-for-server' do

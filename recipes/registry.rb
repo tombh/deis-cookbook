@@ -1,6 +1,7 @@
 
 docker_image node.deis.registry.image do
   action :pull
+  cmd_timeout node.deis.registry.image_timeout
 end
 
 docker_container node.deis.registry.container do
@@ -10,10 +11,9 @@ docker_container node.deis.registry.container do
        "HOST=#{node.deis.public_ip}",
        "PORT=#{node.deis.registry.port}"]
   image node.deis.registry.image
-  init_type false  
+  init_type false
   port "#{node.deis.registry.port}:#{node.deis.registry.port}"
   volume VolumeHelper.registry(node)
-  cmd_timeout 600 # image takes a while to download
 end
 
 ruby_block 'wait-for-registry' do

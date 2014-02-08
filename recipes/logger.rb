@@ -1,6 +1,7 @@
 
 docker_image node.deis.logger.image do
   action :pull
+  cmd_timeout node.deis.logger.image_timeout
 end
 
 docker_container node.deis.logger.container do

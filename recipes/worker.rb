@@ -1,6 +1,7 @@
 
 docker_image node.deis.worker.image do
   action :pull
+  cmd_timeout node.deis.worker.image_timeout
 end
 
 docker_container node.deis.worker.container do
@@ -10,5 +11,4 @@ docker_container node.deis.worker.container do
   image node.deis.worker.image
   init_type false
   volume VolumeHelper.worker(node)
-  cmd_timeout 600 # image takes a while to download
 end
