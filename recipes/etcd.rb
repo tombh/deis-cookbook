@@ -32,6 +32,7 @@ end
 ruby_block 'wait-for-etcd' do
   block do
     Connect.wait_tcp(node.deis.public_ip, node.deis.etcd.port, seconds=30)
+    Connect.wait_http("http://#{node.deis.public_ip}:#{node.deis.etcd.port}/version", seconds=30)
   end
 end
 
@@ -50,7 +51,7 @@ ruby_block 'publish-chef-config' do
       client = Etcd.client(host: node.deis.public_ip, port: node.deis.etcd.port)
       client.get('/deis/chef')
       true
-    rescue Net::HTTPServerException
+    rescue Net::HTTPServerException, Net::HTTPFatalError
       false
     end
   }

@@ -1,6 +1,7 @@
 
-require 'timeout'
+require 'net/http'
 require 'socket'
+require 'timeout'
 
 class Chef::Recipe::Connect
 
@@ -22,6 +23,31 @@ class Chef::Recipe::Connect
       end
     rescue Timeout::Error => e
       raise  
+    end
+  end
+
+  def self.wait_http(u, seconds=30)
+    begin
+      Timeout::timeout(seconds) do
+        url = URI.parse(u)
+        while true do
+          Chef::Log.debug("Trying connection to #{url}")
+          req = Net::HTTP::Get.new(url.to_s)
+          begin
+            res = Net::HTTP.start(url.host, url.port) {|http|
+              http.request(req)
+            }
+            if res.code == '200'
+              return
+            end
+          rescue Errno::ECONNREFUSED, Errno::EHOSTUNREACH => e
+            Chef::Log.debug("Connection error #{e}:")
+          sleep 1
+          end
+        end
+      end
+    rescue Timeout::Error => e
+      raise
     end
   end
     
