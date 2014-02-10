@@ -1,5 +1,5 @@
 include_recipe 'deis::default'
-include_recipe 'deis::etcd'
+include_recipe 'deis::discovery'
 include_recipe 'deis::registry'
 include_recipe 'deis::logger'
 include_recipe 'deis::database'

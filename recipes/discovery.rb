@@ -29,7 +29,7 @@ bash 'install-etcdctl' do
   creates '/usr/local/bin/etcdctl'
 end
 
-ruby_block 'wait-for-etcd' do
+ruby_block 'wait-for-discovery' do
   block do
     Connect.wait_tcp(node.deis.public_ip, node.deis.etcd.port, seconds=30)
     Connect.wait_http("http://#{node.deis.public_ip}:#{node.deis.etcd.port}/version", seconds=30)
