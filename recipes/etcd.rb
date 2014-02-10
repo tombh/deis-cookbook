@@ -22,9 +22,9 @@ bash 'install-etcdctl' do
   code <<-EOH
     wget -O etcd.tar.gz #{node.deis.etcd.url}
     tar xfz etcd.tar.gz
-    mv etcd-v0.2.0-Linux-x86_64/etcdctl /usr/local/bin
+    mv etcd-v0.3.0-linux-amd64/etcdctl /usr/local/bin
     chown -R root:root /usr/local/bin/etcdctl
-    rm -rf etcd.tar.gz etcd-v0.2.0-Linux-x86_64
+    rm -rf etcd.tar.gz etcd-v0.3.0-linux-amd64
     EOH
   creates '/usr/local/bin/etcdctl'
 end
