@@ -28,6 +28,10 @@ class Chef::Recipe::VolumeHelper
     mounts
   end
 
+  def self.database_data(node)
+    ["/var/lib/postgresql"]
+  end
+
   def self.logger(node)
     # share log directory between server and logger components
     # TODO: replace with a distributed mechanism for populating `deis logs`

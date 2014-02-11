@@ -1,4 +1,17 @@
 
+docker_image node.deis.database_data.image do
+  action :pull
+  cmd_timeout node.deis.database_data.image_timeout
+end
+
+docker_container node.deis.database_data.container do
+  container_name node.deis.database_data.container
+  detach true
+  init_type false
+  image node.deis.database_data.image
+  volume VolumeHelper.database_data(node)
+end
+
 docker_image node.deis.database.image do
   action :pull
   cmd_timeout node.deis.database.image_timeout
@@ -14,6 +27,7 @@ docker_container node.deis.database.container do
   init_type "upstart"
   port "#{node.deis.database.port}:#{node.deis.database.port}"
   volume VolumeHelper.database(node)
+  volumes_from node.deis.database_data.container
 end
 
 ruby_block 'wait-for-database' do
