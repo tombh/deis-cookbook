@@ -12,7 +12,7 @@ docker_container node.deis.etcd.container do
        "ETCD_PEER_PORT=#{node.deis.etcd.peer_port}",
        "ETCD_NODE_NAME=#{node.hostname}"]
   image node.deis.etcd.image
-  init_type false
+  init_type "upstart"
   port ["#{node.deis.etcd.port}:#{node.deis.etcd.port}",
         "#{node.deis.etcd.peer_port}:#{node.deis.etcd.peer_port}"]
 end

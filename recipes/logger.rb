@@ -11,7 +11,7 @@ docker_container node.deis.logger.container do
        "HOST=#{node.deis.public_ip}",
        "PORT=#{node.deis.logger.port}"]
   image node.deis.logger.image
-  init_type false
+  init_type "upstart"
   volume VolumeHelper.logger(node)
   port "#{node.deis.logger.port}:#{node.deis.logger.port}"
 end
@@ -19,6 +19,6 @@ end
 ruby_block 'wait-for-logger' do
   block do
     EtcdHelper.wait_for_key(node.deis.public_ip, node.deis.etcd.port,
-                            '/deis/logs/host')
+                            '/deis/logs/host', seconds=60)
   end
 end

@@ -11,7 +11,7 @@ docker_container node.deis.database.container do
        "HOST=#{node.deis.public_ip}",
        "PORT=#{node.deis.database.port}"]
   image node.deis.database.image
-  init_type false
+  init_type "upstart"
   port "#{node.deis.database.port}:#{node.deis.database.port}"
   volume VolumeHelper.database(node)
 end

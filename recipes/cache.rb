@@ -11,7 +11,7 @@ docker_container node.deis.cache.container do
        "HOST=#{node.deis.public_ip}",
        "PORT=#{node.deis.cache.port}"]
   image node.deis.cache.image
-  init_type false
+  init_type "upstart"
   volume VolumeHelper.cache(node)
   port "#{node.deis.cache.port}:#{node.deis.cache.port}"
 end

@@ -20,9 +20,10 @@ docker_container node.deis.builder.container do
        "HOST=#{node.deis.public_ip}",
        "PORT=22"]
   image node.deis.builder.image
-  init_type false
+  init_type "upstart"
   port "#{node.deis.builder.port}:22"
   volume VolumeHelper.builder(node)
+  cmd_timeout 600
 end
 
 # synchronize buildpacks to use during slugbuilder execution
@@ -58,6 +59,6 @@ end
 ruby_block 'wait-for-builder' do
   block do
     EtcdHelper.wait_for_key(node.deis.public_ip, node.deis.etcd.port,
-                            '/deis/builder/host', sleep=300)
+                            '/deis/builder/host', seconds=300)
   end
 end

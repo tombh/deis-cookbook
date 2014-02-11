@@ -11,9 +11,10 @@ docker_container node.deis.registry.container do
        "HOST=#{node.deis.public_ip}",
        "PORT=#{node.deis.registry.port}"]
   image node.deis.registry.image
-  init_type false
+  init_type "upstart"
   port "#{node.deis.registry.port}:#{node.deis.registry.port}"
   volume VolumeHelper.registry(node)
+  cmd_timeout 600
 end
 
 ruby_block 'wait-for-registry' do

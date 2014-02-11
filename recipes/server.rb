@@ -11,9 +11,10 @@ docker_container node.deis.server.container do
        "HOST=#{node.deis.public_ip}",
        "PORT=#{node.deis.server.port}"]
   image node.deis.server.image
-  init_type false
+  init_type "upstart"
   port "#{node.deis.server.port}:#{node.deis.server.port}"
   volume VolumeHelper.server(node)
+  cmd_timeout 600
 end
 
 ruby_block 'wait-for-server' do
