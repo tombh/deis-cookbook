@@ -15,7 +15,7 @@ class Chef::Recipe::VolumeHelper
   def self.cache(node)
     mounts = []
     if node.deis.dev.mode == true
-      mounts << "#{File.join(node.deis.dev.source, 'images/redis')}:/app"
+      mounts << "#{File.join(node.deis.dev.source, 'images/cache')}:/app"
     end
     mounts
   end
@@ -23,7 +23,7 @@ class Chef::Recipe::VolumeHelper
   def self.database(node)
     mounts = []
     if node.deis.dev.mode == true
-      mounts << "#{File.join(node.deis.dev.source, 'images/postgres')}:/app"
+      mounts << "#{File.join(node.deis.dev.source, 'images/database')}:/app"
     end
     mounts
   end
@@ -33,7 +33,7 @@ class Chef::Recipe::VolumeHelper
     # TODO: replace with a distributed mechanism for populating `deis logs`
     mounts = ["#{node.deis.log_dir}:/var/log/deis"]
     if node.deis.dev.mode == true
-      mounts << "#{File.join(node.deis.dev.source, 'images/rsyslog')}:/app"
+      mounts << "#{File.join(node.deis.dev.source, 'images/logger')}:/app"
     end
     mounts
   end
