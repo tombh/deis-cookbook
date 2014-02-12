@@ -1,4 +1,4 @@
-define :container, :c_type => nil, :c_num => nil, :env => {}, :port => nil, :image => nil, :slug_dir => nil, :app_name => nil do # ~FC037
+define :container, :c_type => nil, :c_num => nil, :env => {}, :port => nil, :image => nil, :app_name => nil, :command => nil do # ~FC037
 
   service_name = "deis-#{params[:name]}"
   
@@ -15,6 +15,7 @@ define :container, :c_type => nil, :c_num => nil, :env => {}, :port => nil, :ima
       :port => params[:port],
       :c_type => params[:c_type],
       :c_num => params[:c_num],
+      :command => params[:command],
     })
     # stop the service to force job definition reload
     notifies :stop, "service[#{service_name}]", :immediately

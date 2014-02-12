@@ -4,6 +4,8 @@ contains Chef recipes for provisioning Deis nodes.
 To get started with your own private PaaS, check out the
 [Deis](https://github.com/opdemand/deis) project.
 
+[![Build Status](https://travis-ci.org/opdemand/deis-cookbook.png)](https://travis-ci.org/opdemand/deis-cookbook)
+
 ## Requirements
 
 The Deis cookbook is designed to work with **Ubuntu 12.04 LTS**.  While other Ubuntu or Debian distros may work, they have not been tested.
@@ -31,11 +33,10 @@ TODO: List Deis cookbook attributes.
 The controller recipe will create a complete Deis controller on a single node including:
 
  * PostgreSQL database
- * Django API Server 
+ * Django API Server
  * RabbitMQ installation
  * Celery worker service
- * Nginx site for API 
- * Gitosis server
+ * Nginx site for API
  * Docker daemon
  * Docker-based build system
  * Nginx site for hosting build "slugs"
