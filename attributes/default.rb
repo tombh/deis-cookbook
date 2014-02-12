@@ -61,6 +61,11 @@ default.deis.registry.source = '/vagrant/images/registry'
 default.deis.registry.container = 'deis-registry'
 default.deis.registry.port = 5000
 
+# registry-data
+default.deis.registry_data.image = 'deis/data'
+default.deis.registry_data.image_timeout = 300
+default.deis.registry_data.container = 'deis-registry-data'
+
 # builder
 default.deis.builder.image = 'deis/builder'
 default.deis.builder.image_timeout = default.deis.image_timeout

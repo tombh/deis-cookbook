@@ -50,6 +50,10 @@ class Chef::Recipe::VolumeHelper
     mounts
   end
 
+  def self.registry_data(node)
+    ["/data"]
+  end
+  
   def self.server(node)
     # share log directory between server and logger components
     # TODO: replace with a distributed mechanism for populating `deis logs`

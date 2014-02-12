@@ -1,4 +1,17 @@
 
+docker_image node.deis.registry_data.image do
+  action :pull
+  cmd_timeout node.deis.registry_data.image_timeout
+end
+
+docker_container node.deis.registry_data.container do
+  container_name node.deis.registry_data.container
+  detach true
+  init_type false
+  image node.deis.registry_data.image
+  volume VolumeHelper.registry_data(node)
+end
+
 docker_image node.deis.registry.image do
   action :pull
   cmd_timeout node.deis.registry.image_timeout
