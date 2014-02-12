@@ -7,7 +7,6 @@ end
 docker_container node.deis.database_data.container do
   container_name node.deis.database_data.container
   detach true
-  init_type false
   image node.deis.database_data.image
   volume VolumeHelper.database_data(node)
 end
@@ -24,7 +23,6 @@ docker_container node.deis.database.container do
        "HOST=#{node.deis.public_ip}",
        "PORT=#{node.deis.database.port}"]
   image node.deis.database.image
-  init_type "upstart"
   port "#{node.deis.database.port}:#{node.deis.database.port}"
   volume VolumeHelper.database(node)
   volumes_from node.deis.database_data.container

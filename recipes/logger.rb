@@ -11,7 +11,6 @@ docker_container node.deis.logger.container do
        "HOST=#{node.deis.public_ip}",
        "PORT=#{node.deis.logger.port}"]
   image node.deis.logger.image
-  init_type "upstart"
   volume VolumeHelper.logger(node)
   port "#{node.deis.logger.port}:#{node.deis.logger.port}"
 end

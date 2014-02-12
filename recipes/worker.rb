@@ -9,7 +9,6 @@ docker_container node.deis.worker.container do
   detach true
   env ["ETCD=#{node.deis.public_ip}:#{node.deis.etcd.port}"]
   image node.deis.worker.image
-  init_type "upstart"
   volume VolumeHelper.worker(node)
   cmd_timeout 600
 end
