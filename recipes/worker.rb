@@ -1,6 +1,6 @@
 
 docker_image node.deis.worker.image do
-  action :pull
+  action :pull_if_missing
   cmd_timeout node.deis.worker.image_timeout
 end
 

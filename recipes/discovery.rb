@@ -1,6 +1,6 @@
 
 docker_image node.deis.etcd.image do
-  action :pull
+  action :pull_if_missing
   cmd_timeout node.deis.etcd.image_timeout
 end
 

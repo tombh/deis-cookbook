@@ -1,6 +1,6 @@
 
 docker_image node.deis.database_data.image do
-  action :pull
+  action :pull_if_missing
   cmd_timeout node.deis.database_data.image_timeout
 end
 
@@ -12,7 +12,7 @@ docker_container node.deis.database_data.container do
 end
 
 docker_image node.deis.database.image do
-  action :pull
+  action :pull_if_missing
   cmd_timeout node.deis.database.image_timeout
 end
 

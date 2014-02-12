@@ -1,6 +1,6 @@
 
 docker_image node.deis.registry_data.image do
-  action :pull
+  action :pull_if_missing
   cmd_timeout node.deis.registry_data.image_timeout
 end
 
@@ -13,7 +13,7 @@ docker_container node.deis.registry_data.container do
 end
 
 docker_image node.deis.registry.image do
-  action :pull
+  action :pull_if_missing
   cmd_timeout node.deis.registry.image_timeout
 end
 

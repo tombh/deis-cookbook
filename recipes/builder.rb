@@ -8,7 +8,7 @@ if node.deis.builder.packs != nil
 end
 
 docker_image node.deis.builder.image do
-  action :pull
+  action :pull_if_missing
   cmd_timeout node.deis.builder.image_timeout
 end
 
