@@ -31,7 +31,7 @@ default.deis.database.port = 5432
 
 # database-data
 default.deis.database_data.image = 'deis/data'
-default.deis.database_data.image_timeout = 300
+default.deis.database_data.image_timeout = default.deis.image_timeout
 default.deis.database_data.container = 'deis-database-data'
 
 # cache
