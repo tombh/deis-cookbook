@@ -11,4 +11,4 @@
 *.sublime-workspace
 
 metadata.json
-/tmp
+tmp/
