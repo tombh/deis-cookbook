@@ -8,6 +8,7 @@ docker_container node.deis.database_data.container do
   container_name node.deis.database_data.container
   detach true
   image node.deis.database_data.image
+  init_type false
   volume VolumeHelper.database_data(node)
 end
 
