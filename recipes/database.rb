@@ -32,6 +32,6 @@ end
 ruby_block 'wait-for-database' do
   block do
     EtcdHelper.wait_for_key(node.deis.public_ip, node.deis.etcd.port,
-                            '/deis/database/host')
+                            '/deis/database/host', seconds=60)
   end
 end
