@@ -15,6 +15,21 @@ node.default['docker']['version'] = '0.8.0'
 # install docker through chef-docker
 include_recipe 'docker'
 
+# In a Vagrant environment most containers have bind mount volumes to the shared /vagrant folder.
+# This folder isn't mounted by vagrant until the end of the boot process which means that if the
+# docker daemon starts when it normally does (start on runlevel [2345]) then the containers won't
+# boot properly. To working around this in a way that doesn't mean maintaining a custom docker recipe
+# we just use sed to replace the 'start on' stanza.
+if node.deis.dev.mode == true
+  bash "patch_docker_upstart_start_event" do
+   user "root"
+   code <<-EOF
+      sed -i '/start on.*/c\\start on vagrant-mounted' /etc/init/docker.conf
+   EOF
+   not_if "grep -q vagrant-mounted /etc/init/docker.conf"
+ end
+end
+
 # install required packages
 package 'fail2ban'
 package 'git'
