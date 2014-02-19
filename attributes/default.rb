@@ -67,7 +67,7 @@ default.deis.registry_data.image_timeout = 300
 default.deis.registry_data.container = 'deis-registry-data'
 
 # builder
-default.deis.builder.image = 'deis/builder:v0.1.0'
+default.deis.builder.image = 'deis/builder:v0.1.1'
 default.deis.builder.image_timeout = default.deis.image_timeout
 default.deis.builder.source = '/vagrant/images/builder'
 default.deis.builder.container = 'deis-builder'
