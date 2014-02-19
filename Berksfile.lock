@@ -1,5 +1,8 @@
 {
   "sources": {
+    "deis": {
+      "path": "."
+    },
     "apt": {
       "locked_version": "2.3.8"
     },
