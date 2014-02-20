@@ -24,7 +24,7 @@ if node.deis.dev.mode == true
   bash "patch_docker_upstart_start_event" do
    user "root"
    code <<-EOF
-      sed -i '/start on.*/c\\start on vagrant-mounted' /etc/init/docker.conf
+      sed -i '/start on.*/c\\start on filesystem and vagrant-mounted and started lxc-net' /etc/init/docker.conf
    EOF
    not_if "grep -q vagrant-mounted /etc/init/docker.conf"
  end
