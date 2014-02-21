@@ -20,5 +20,11 @@ ruby_block 'wait-for-server' do
   block do
     EtcdHelper.wait_for_key(node.deis.public_ip, node.deis.etcd.port,
                             '/deis/controller/host')
+
+    # Ensure that deis-server has development dependencies for running tests
+    if node.deis.dev.mode == true
+      output = `sudo /vagrant/contrib/vagrant/util/add_server_dev_deps.sh 2>&1`
+      raise output if $?.exitstatus != 0
+    end
   end
 end
