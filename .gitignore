@@ -10,5 +10,8 @@
 *.sublime-project
 *.sublime-workspace
 
+#rbenv
+.ruby-version
+
 metadata.json
 tmp/
