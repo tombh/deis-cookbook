@@ -19,6 +19,7 @@ docker_image node.deis.registry.repository do
   tag node.deis.registry.tag
   action node.deis.autoupgrade ? :pull : :pull_if_missing
   cmd_timeout node.deis.registry.image_timeout
+  notifies :redeploy, "docker_container[#{node.deis.registry.container}]", :immediately
 end
 
 docker_container node.deis.registry.container do
