@@ -2,7 +2,7 @@
 docker_image node.deis.etcd.repository do
   repository node.deis.etcd.repository
   tag node.deis.etcd.tag
-  action node.deis.dev.mode ? :pull_if_missing : :pull
+  action node.deis.autoupgrade ? :pull : :pull_if_missing
   cmd_timeout node.deis.etcd.image_timeout
 end
 

@@ -2,7 +2,7 @@
 docker_image node.deis.cache.repository do
   repository node.deis.cache.repository
   tag node.deis.cache.tag
-  action node.deis.dev.mode ? :pull_if_missing : :pull
+  action node.deis.autoupgrade ? :pull : :pull_if_missing
   cmd_timeout node.deis.cache.image_timeout
 end
 

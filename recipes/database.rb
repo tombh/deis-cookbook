@@ -17,7 +17,7 @@ end
 docker_image node.deis.database.repository do
   repository node.deis.database.repository
   tag node.deis.database.tag
-  action node.deis.dev.mode ? :pull_if_missing : :pull
+  action node.deis.autoupgrade ? :pull : :pull_if_missing
   cmd_timeout node.deis.database.image_timeout
 end
 

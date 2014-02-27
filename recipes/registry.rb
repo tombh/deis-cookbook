@@ -17,7 +17,7 @@ end
 docker_image node.deis.registry.repository do
   repository node.deis.registry.repository
   tag node.deis.registry.tag
-  action node.deis.dev.mode ? :pull_if_missing : :pull
+  action node.deis.autoupgrade ? :pull : :pull_if_missing
   cmd_timeout node.deis.registry.image_timeout
 end
 

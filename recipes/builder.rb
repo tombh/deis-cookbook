@@ -10,7 +10,7 @@ end
 docker_image node.deis.builder.repository do
   repository node.deis.builder.repository
   tag node.deis.builder.tag
-  action node.deis.dev.mode ? :pull_if_missing : :pull
+  action node.deis.autoupgrade ? :pull : :pull_if_missing
   cmd_timeout node.deis.builder.image_timeout
 end
 

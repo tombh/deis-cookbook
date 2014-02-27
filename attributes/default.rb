@@ -5,6 +5,7 @@ default.deis.group = 'deis'
 default.deis.log_dir = '/var/log/deis'
 default.deis.public_ip = nil  # public ip must be defined or discovered
 default.deis.image_timeout = 300
+default.deis.autoupgrade = true # redeploy containers when images are updated
 
 # development
 default.deis.dev.mode = false

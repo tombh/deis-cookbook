@@ -2,7 +2,7 @@
 docker_image node.deis.worker.repository do
   repository node.deis.worker.repository
   tag node.deis.worker.tag
-  action node.deis.dev.mode ? :pull_if_missing : :pull
+  action node.deis.autoupgrade ? :pull : :pull_if_missing
   cmd_timeout node.deis.worker.image_timeout
 end
 
