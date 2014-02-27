@@ -4,6 +4,7 @@ docker_image node.deis.cache.repository do
   tag node.deis.cache.tag
   action node.deis.autoupgrade ? :pull : :pull_if_missing
   cmd_timeout node.deis.cache.image_timeout
+  notifies :redeploy, "docker_container[#{node.deis.cache.container}]", :immediately
 end
 
 docker_container node.deis.cache.container do

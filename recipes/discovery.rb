@@ -4,6 +4,7 @@ docker_image node.deis.etcd.repository do
   tag node.deis.etcd.tag
   action node.deis.autoupgrade ? :pull : :pull_if_missing
   cmd_timeout node.deis.etcd.image_timeout
+  notifies :redeploy, "docker_container[#{node.deis.etcd.container}]", :immediately
 end
 
 docker_container node.deis.etcd.container do
