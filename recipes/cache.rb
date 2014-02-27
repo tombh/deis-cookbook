@@ -1,6 +1,8 @@
 
-docker_image node.deis.cache.image do
-  action :pull_if_missing
+docker_image node.deis.cache.repository do
+  repository node.deis.cache.repository
+  tag node.deis.cache.tag
+  action node.deis.dev.mode ? :pull_if_missing : :pull
   cmd_timeout node.deis.cache.image_timeout
 end
 
@@ -10,7 +12,7 @@ docker_container node.deis.cache.container do
   env ["ETCD=#{node.deis.public_ip}:#{node.deis.etcd.port}",
        "HOST=#{node.deis.public_ip}",
        "PORT=#{node.deis.cache.port}"]
-  image node.deis.cache.image
+  image "#{node.deis.cache.repository}:#{node.deis.cache.tag}"
   volume VolumeHelper.cache(node)
   port "#{node.deis.cache.port}:#{node.deis.cache.port}"
 end

@@ -7,8 +7,10 @@ if node.deis.builder.packs != nil
   end
 end
 
-docker_image node.deis.builder.image do
-  action :pull_if_missing
+docker_image node.deis.builder.repository do
+  repository node.deis.builder.repository
+  tag node.deis.builder.tag
+  action node.deis.dev.mode ? :pull_if_missing : :pull
   cmd_timeout node.deis.builder.image_timeout
 end
 
@@ -19,7 +21,7 @@ docker_container node.deis.builder.container do
   env ["ETCD=#{node.deis.public_ip}:#{node.deis.etcd.port}",
        "HOST=#{node.deis.public_ip}",
        "PORT=22"]
-  image node.deis.builder.image
+  image "#{node.deis.builder.repository}:#{node.deis.builder.tag}"
   port "#{node.deis.builder.port}:22"
   volume VolumeHelper.builder(node)
   cmd_timeout 600
