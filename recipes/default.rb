@@ -16,7 +16,10 @@ chef_gem 'macaddr' do
 end
 
 # install etcd bindings
-chef_gem 'etcd'
+chef_gem 'etcd' do
+  version '0.0.6'
+  action :install
+end
 
 # bind docker to all interfaces for external connectivity
 node.default['docker']['bind_uri'] = 'tcp://0.0.0.0:4243'
